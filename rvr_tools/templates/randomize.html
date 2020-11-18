@@ -1,0 +1,51 @@
+{% extends "layout.html" %}
+{% block content %}
+<div class="content-section">
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">Suits Randomizer</legend>
+            <div class="form-group">
+                {{ form.range_str.label(class="form-control-label") }}
+                {% if form.range_str.errors %}
+                {{ form.range_str(class="form-control form-control-lg is-invalid" ) }}
+                <div class="invalid-feedback">
+                    {% for error in form.range_str.errors %}#
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.range_str(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-outline-info") }}
+        </div>
+    </form>
+    <h1>Output</h1>
+    <div class="card" style="w-100">
+        <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+        <div class="card-body">
+            <h5 class="card-title">Range Output:</h5>
+            <p class="card-text" id="output">{{ r }}</p>
+            <!-- <a href="#" class="btn btn-secondary">Go somewhere</a> -->
+            <button onclick="copyElementText('output')" class="btn btn-outline-info">Copy text</button>
+        </div>
+    </div>
+</div>
+
+<script>
+    function copyElementText(id) {
+    var text = document.getElementById(id).innerText;
+    var elem = document.createElement("textarea");
+    document.body.appendChild(elem);
+    elem.value = text;
+    elem.select();
+    document.execCommand("copy");
+    alert("Copied the text: " + elem.value);
+    document.body.removeChild(elem);
+}
+    </script>
+
+{% endblock content %}
