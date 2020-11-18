@@ -1,5 +1,5 @@
 from flask import render_template, url_for, flash, redirect
-from rvr_tools.forms import RandomizeForm
+from rvr_tools.forms import CalcMDF, RandomizeForm
 from rvr_tools import app
 
 
@@ -30,6 +30,18 @@ def randomize():
                                r=range_str)
     return render_template('randomize.html', titel='Randomize', form=form)
 
-@app.route('/calculator')
+
+@app.route('/calculator', methods=['GET', 'POST'])
 def calculator():
-    return render_template('calculator.html', titel='Randomize')
+    form = CalcMDF()
+    if form.validate_on_submit():
+        pot = form.pot.data
+        prev_bet = form.prev_bet.data
+        bet = form.bet.data
+        mdf = pot + prev_bet + bet
+        flash('successfully randomized', 'success')
+        return render_template('calculator.html',
+                               titel='Randomize',
+                               form=form,
+                               mdf=mdf)
+    return render_template('calculator.html', titel='Randomize', form=form)

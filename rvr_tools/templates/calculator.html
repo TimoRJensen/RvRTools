@@ -1,11 +1,73 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="card content-section">
-    <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
-    <div class="card-body">
-        <h5 class="card-title">Range:</h5>
-        <p class="card-text">{{ r }}</p>
-        <a href="#" class="btn btn-primary">Go somewhere</a>
+<div class="content-section">
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <fieldset class="form-group">
+            <legend class="border-bottom mb-4">MDF Calculator</legend>
+            <div class="form-group">
+                {{ form.pot.label(class="form-control-label") }}
+                {% if form.pot.errors %}
+                {{ form.pot(class="form-control form-control-lg is-invalid" ) }}
+                <div class="invalid-feedback">
+                    {% for error in form.pot.errors %}#
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.pot(class="form-control form-control-lg") }}
+                {% endif %}
+
+                {{ form.bet.label(class="form-control-label") }}
+                {% if form.bet.errors %}
+                {{ form.bet(class="form-control form-control-lg is-invalid" ) }}
+                <div class="invalid-feedback">
+                    {% for error in form.bet.errors %}#
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.bet(class="form-control form-control-lg") }}
+                {% endif %}
+
+                {{ form.prev_bet.label(class="form-control-label") }}
+                {% if form.prev_bet.errors %}
+                {{ form.prev_bet(class="form-control form-control-lg is-invalid" ) }}
+                <div class="invalid-feedback">
+                    {% for error in form.prev_bet.errors %}#
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.prev_bet(class="form-control form-control-lg") }}
+                {% endif %}
+            </div>
+        </fieldset>
+        <div class="form-group">
+            {{ form.submit(class="btn btn-outline-info") }}
+        </div>
+    </form>
+    <div class="card w-100">
+        <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+        <div class="card-body">
+            <h5 class="card-title">Range Output:</h5>
+            <p class="card-text" id="output">{{ mdf }}</p>
+            <!-- <a href="#" class="btn btn-secondary">Go somewhere</a> -->
+            <button onclick="copyElementText('output')" class="btn btn-outline-info">Copy</button>
+        </div>
     </div>
 </div>
+
+<script>
+    function copyElementText(id) {
+    var text = document.getElementById(id).innerText;
+    var elem = document.createElement("textarea");
+    document.body.appendChild(elem);
+    elem.value = text;
+    elem.select();
+    document.execCommand("copy");
+    alert("Copied the text: " + elem.value);
+    document.body.removeChild(elem);
+}
+    </script>
 {% endblock content %}
