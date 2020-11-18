@@ -1,5 +1,6 @@
 from flask import render_template, url_for, flash, redirect
 from rvr_tools.forms import CalcMDF, RandomizeForm
+from rvr_tools.calculator import MDF
 from rvr_tools import app
 
 
@@ -36,12 +37,14 @@ def calculator():
     form = CalcMDF()
     if form.validate_on_submit():
         pot = form.pot.data
-        prev_bet = form.prev_bet.data
         bet = form.bet.data
-        mdf = pot + prev_bet + bet
-        flash('successfully randomized', 'success')
+        invest = form.invest.data
+        v_invest = form.v_invest.data
+        mdf = MDF(pot=pot, bet=bet, invest=invest, villain_invest=v_invest)
+        flash('Calculated MDF and Alpha', 'success')
         return render_template('calculator.html',
                                titel='Randomize',
                                form=form,
-                               mdf=mdf)
+                               mdf=round(mdf.mdf_pct, 1),
+                               alpha=round(mdf.alpha_pct, 1))
     return render_template('calculator.html', titel='Randomize', form=form)

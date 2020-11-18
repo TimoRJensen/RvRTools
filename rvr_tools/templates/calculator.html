@@ -30,16 +30,28 @@
                 {{ form.bet(class="form-control form-control-lg") }}
                 {% endif %}
 
-                {{ form.prev_bet.label(class="form-control-label") }}
-                {% if form.prev_bet.errors %}
-                {{ form.prev_bet(class="form-control form-control-lg is-invalid" ) }}
+                {{ form.invest.label(class="form-control-label") }}
+                {% if form.invest.errors %}
+                {{ form.invest(class="form-control form-control-lg is-invalid" ) }}
                 <div class="invalid-feedback">
-                    {% for error in form.prev_bet.errors %}#
+                    {% for error in form.invest.errors %}#
                     <span>{{ error }}</span>
                     {% endfor %}
                 </div>
                 {% else %}
-                {{ form.prev_bet(class="form-control form-control-lg") }}
+                {{ form.invest(class="form-control form-control-lg") }}
+                {% endif %}
+
+                {{ form.v_invest.label(class="form-control-label") }}
+                {% if form.v_invest.errors %}
+                {{ form.v_invest(class="form-control form-control-lg is-invalid" ) }}
+                <div class="invalid-feedback">
+                    {% for error in form.v_invest.errors %}#
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.v_invest(class="form-control form-control-lg") }}
                 {% endif %}
             </div>
         </fieldset>
@@ -47,18 +59,23 @@
             {{ form.submit(class="btn btn-outline-info") }}
         </div>
     </form>
-    <div class="card w-100">
+    <div class="card w-100 mb-4">
         <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
         <div class="card-body">
-            <h5 class="card-title">Range Output:</h5>
-            <p class="card-text" id="output">{{ mdf }}</p>
-            <!-- <a href="#" class="btn btn-secondary">Go somewhere</a> -->
-            <button onclick="copyElementText('output')" class="btn btn-outline-info">Copy</button>
+            <h5 class="card-header">MDF:</h5>
+            <p class="card-text" id="output">{{ mdf }}%</p>
+            <!-- <button onclick="copyElementText('output')" class="btn btn-outline-info">Copy MDF</button> -->
+        </div>
+    </div>
+    <div class="card w-100 mb-4">
+        <div class="card-body">
+            <h5 class="card-title">Alpha:</h5>
+            <p class="card-text" id="output-alpha">{{ alpha }}%</p>
         </div>
     </div>
 </div>
 
-<script>
+<!-- <script>
     function copyElementText(id) {
     var text = document.getElementById(id).innerText;
     var elem = document.createElement("textarea");
@@ -69,5 +86,5 @@
     alert("Copied the text: " + elem.value);
     document.body.removeChild(elem);
 }
-    </script>
+    </script> -->
 {% endblock content %}

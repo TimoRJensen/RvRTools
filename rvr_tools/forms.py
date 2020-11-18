@@ -11,12 +11,20 @@ class RandomizeForm(FlaskForm):
 class CalcMDF(FlaskForm):
     pot = IntegerField('Pot size', validators=[NumberRange(min=5, max=1000),
                                                DataRequired()])
-    prev_bet = IntegerField('Your previous bet',
+    bet = IntegerField('Bet', validators=[NumberRange(min=2, max=200),
+                                          DataRequired()])
+    invest = IntegerField('Your previous invest',
+                          validators=[NumberRange(min=0,
+                                                  max=200
+                                                  )
+                                      ],
+                          default=0
+                          )
+    v_invest = IntegerField("Villain's previous invest",
                             validators=[NumberRange(min=0,
                                                     max=200
                                                     )
-                                        ]
+                                        ],
+                            default=0
                             )
-    bet = IntegerField('Bet', validators=[NumberRange(min=2, max=200),
-                                          DataRequired()])
     submit = SubmitField('Calculate')
