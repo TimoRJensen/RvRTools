@@ -16,6 +16,7 @@ Believe me, it's great!
 ## Idea / Approach for RvR Tools
 This is a collection of useful tools that improve your expecrience playing RvR.
 It an open collection and everyone is invited to contribute to it.
+It's build as a Flask App in Python (like RvR).
 
 ## Tools
 ### Suits Randomizer
