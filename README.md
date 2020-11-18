@@ -9,6 +9,7 @@
 ## What is RvR?
 RvR (short for Range versus Range) is:
 > game-changing training for professional no-limit hold'em
+
 Read more on it's [about page](https://www.rangevsrange.com/about).
 Believe me, it's great!
 
