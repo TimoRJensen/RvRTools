@@ -1,7 +1,19 @@
-from flask import render_template, url_for, flash, redirect
+from os import path
+from flask import (render_template,
+                   url_for,
+                   flash,
+                   redirect,
+                   send_from_directory)
 from rvr_tools.forms import CalcMDF, RandomizeForm
 from rvr_tools.calculator import MDF
 from rvr_tools import app
+
+
+@app.route('/favicon.ico')
+def favicon():
+    return send_from_directory(path.join(app.root_path, 'static'),
+                               'favicon.ico',
+                               mimetype='image/vnd.microsoft.icon')
 
 
 @app.route("/")
