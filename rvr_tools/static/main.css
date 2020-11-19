@@ -24,6 +24,10 @@ body {
     font-size: 2em;
   }
 
+  .tje-w {
+    width: 33%;
+  }
+
   .bg-rvrgrey {
     background-color: #F8F8F8;
   }

@@ -4,21 +4,21 @@
     <div class="row">
         <div class="col">
             <div class="card bg-light">
-                <form action="" method="post" class="m-2">
+                <form action="" method="post" class="mb-2">
                     {{ form.hidden_tag() }}
                     <fieldset class="form-group ">
                         <h4 class="card-header mb-2">MDF Calculator</h4>
                         <div class="form-group">
-                            {{ form.pot.label(class="form-control-label") }}
+                            {{ form.pot.label(class="form-control-label m-2") }}
                             {% if form.pot.errors %}
-                            {{ form.pot(class="form-control form-control-lg is-invalid" ) }}
+                            {{ form.pot(class="form-control form-control-sm is-invalid m-2 tje-w") }}
                             <div class="invalid-feedback">
                                 {% for error in form.pot.errors %}#
                                 <span>{{ error }}</span>
                                 {% endfor %}
                             </div>
                             {% else %}
-                            {{ form.pot(class="form-control form-control-lg") }}
+                            {{ form.pot(class="form-control form-control-sm m-2 tje-w") }}
                             {% endif %}
 
                             {{ form.bet.label(class="form-control-label") }}
