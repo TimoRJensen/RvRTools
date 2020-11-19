@@ -8,7 +8,7 @@ class RandomizeForm(FlaskForm):
     submit = SubmitField('Randomize')
 
 
-class CalcMDF(FlaskForm):
+class CalcMdfForm(FlaskForm):
     pot = IntegerField('Pot size', validators=[NumberRange(min=5, max=1000),
                                                DataRequired()])
     bet = IntegerField('Bet', validators=[NumberRange(min=2, max=200),

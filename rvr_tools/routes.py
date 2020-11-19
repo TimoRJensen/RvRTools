@@ -4,7 +4,7 @@ from flask import (render_template,
                    flash,
                    redirect,
                    send_from_directory)
-from rvr_tools.forms import CalcMDF, RandomizeForm
+from rvr_tools.forms import CalcMdfForm, RandomizeForm
 from rvr_tools.calculator import MDF
 from rvr_tools import app
 
@@ -46,7 +46,7 @@ def randomize():
 
 @app.route('/calculator', methods=['GET', 'POST'])
 def calculator():
-    form = CalcMDF()
+    form = CalcMdfForm()
     if form.validate_on_submit():
         pot = form.pot.data
         bet = form.bet.data
