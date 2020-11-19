@@ -3,7 +3,7 @@ Version: 0.02
 
 Author: GTOHOLE 11-20
 """
-
+from typing import List
 from pandas import DataFrame
 from random import sample
 from pynlh import Hand
@@ -25,7 +25,7 @@ class RangeError(Exception):
 
 
 class Range:
-    def __init__(self, range_str, game_uid=None):
+    def __init__(self, range_str):
         '''This class represents a range and is usually defined by a
         range string like 'AA,QQ-TT,AKs,QJo-Q9o,[56.0]KQs-KTs[/56.0]'.
 
@@ -49,16 +49,15 @@ class Range:
 
         ";" will be replaced by a ","
         '''
-        self.game_uid = game_uid
         self.range_str = range_str.replace(";", ",")
         self.parts = []
         self.hands_dict = self.build_0freq_hands_dict()
-        self.converted_range_dict = self.convert_range_str_to_dict(game_uid)
+        self.converted_range_dict = self.convert_range_str_to_dict()
         self._validate_input()
 
     def __repr__(self) -> str:
         if self.game_uid is not None:
-            return f"Range({self.range_str}, {self.game_uid})"
+            return f"Range({self.range_str})"
         else:
             return f"Range({self.range_str})"
 
@@ -129,7 +128,7 @@ class Range:
         df = df.groupby(['group', 'freq']).agg(list)
         return df
 
-    def convert_range_str_to_dict(self, game_uid):
+    def convert_range_str_to_dict(self):
         """
         Converts rangestrings into single hands dictionary with frequences.
 
@@ -143,9 +142,7 @@ class Range:
         str_no_space = self.range_str.replace(" ", "")
         str_split = self.split_range_str_in_parts(str_no_space)
         for part_str in str_split:
-            self.parts.append(RangeStringPart(part_str,
-                                              game_uid=game_uid,
-                                              my_range_obj=self))
+            self.parts.append(RangeStringPart(part_str, my_range_obj=self))
         for part in self.parts:
             for h in part.hands:
                 rv[h] = part.freq
@@ -183,7 +180,7 @@ class Range:
             randomized_suits_string = rv[:-len(combo_delimiter)]
             return randomized_suits_string
         elif grouping == 'skl-mal':
-            df = self.build_df_freqs_and_combos_skl_mal(self)
+            df = self.build_df_freqs_and_combos_skl_mal()
             ls_cmbs_hand = []
             rv_list = []
             df['flat_combos'] = df['combos'].apply(self._flatten_l_of_ls, 1)
@@ -203,7 +200,7 @@ class Range:
             # print(df.head(10))
             return randomized_suits_string
 
-    def split_range_str_in_parts(self, range_str: str = None) -> list(str):
+    def split_range_str_in_parts(self, range_str: str = None) -> List[str]:
         """
         Parses the given rangestring and returns a list with it's partial
         strings in a list.
@@ -254,7 +251,6 @@ class RangeStringPart:
     def __init__(self,
                  part,
                  my_range_obj=None,
-                 game_uid=None,
                  freq=None,
                  range_identifier='-',
                  plus_range_identifier='+'):
@@ -280,7 +276,6 @@ class RangeStringPart:
         created by TJE 10-20
         """
         self.part = part
-        self.game_uid = game_uid
         self.freq = freq
         self.my_range_obj = my_range_obj
         if self.my_range_obj is None:

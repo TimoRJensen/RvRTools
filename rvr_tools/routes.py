@@ -7,6 +7,7 @@ from flask import (render_template,
 from rvr_tools.forms import CalcMdfForm, RandomizeForm
 from rvr_tools.calculator import MDF
 from rvr_tools import app
+from pynlh import Range
 
 
 @app.route('/favicon.ico')
@@ -33,9 +34,8 @@ def about():
 def randomize():
     form = RandomizeForm()
     if form.validate_on_submit():
-        # range_ = MyRange(form.range_str.data)
-        # range_str = randomize_suits_for_range(range_)
-        range_str = ''
+        range_ = Range(form.range_str.data)
+        range_str = range_.randomize_suits_for_range()
         flash('successfully randomized', 'success')
         return render_template('randomize.html',
                                titel='Randomize',
