@@ -27,8 +27,7 @@ class Hand:
 
     def _set_default_values(self):
         if self.handstring:
-            self.hand_type = self.evaluate_hand_type_from_handstring(
-                self.handstring)
+            self.hand_type = self.evaluate_hand_type_from_handstring()
             self.hand = self.eval_hand_from_handstring()
         elif not self.handstring:
             self.handstring = self.eval_handstring()
@@ -42,11 +41,18 @@ class Hand:
     def eval_hand_from_handstring(self):
         return self.handstring[0:2]
 
-    def evaluate_hand_type_from_handstring(self, handstring):
-        if len(handstring) == 2:
+    def evaluate_hand_type_from_handstring(self):
+        """
+        Evaluates the hand type (suited, offsuit, pair or nosuit) from a given
+        handstring (self.handstring).
+        """
+        hand_str = self.handstring
+        if (len(hand_str) == 2) and (hand_str[0] == hand_str[1]):
             return "pair"
+        elif (len(hand_str) == 2) and (hand_str[0] != hand_str[1]):
+            return "nosuit"
         else:
-            suit = handstring[2].lower()
+            suit = hand_str[2].lower()
             if suit == "s":
                 return "suited"
             elif suit == "o":
@@ -70,6 +76,8 @@ class Hand:
             rv = [c for c in rv if c[1] == c[3]]
         elif self.hand_type == 'offsuit':
             rv = [c for c in rv if (c[0] != c[2]) and (c[1] != c[3])]
+        elif self.hand_type == 'nosuit':
+            rv = [c for c in rv if (c[0] != c[2])]
         return rv
 
     def get_sklansky_malmuth_handclass(self):
