@@ -6,7 +6,36 @@ Author: GTOHOLE 11-20
 SUITS = ["s", "c", "d", "h"]
 
 
-class Hand:
+class HandError(Exception):
+    """
+    Exception class of pynlh's Hand class.
+    """
+    pass
+
+    def __init__(self, handstring, msg='Not a valid hand!'):
+        self.handstring = handstring
+        self.msg = msg
+        super().__init__(self.msg)
+
+    def __str__(self):
+        return f"'{self.handstring}' -> {self.msg}"
+
+
+class Hand():
+    RANKS = {'A': 1,
+             'K': 2,
+             'Q': 3,
+             'J': 4,
+             'T': 5,
+             '9': 6,
+             '8': 7,
+             '7': 8,
+             '6': 9,
+             '5': 10,
+             '4': 11,
+             '3': 12,
+             '2': 13,
+             }
 
     def __init__(self,
                  hand: str = None,
@@ -25,15 +54,42 @@ class Hand:
     def __str__(self) -> str:
         return(self.handstring)
 
+    def __len__(self) -> int:
+        return len(self.handstring)
+
+    @property
+    def index_x(self):
+        """
+        Property X-Index (The Position from left to right.)
+        "Nosuit" hands will be treated as "offsuit" hands.
+        """
+        if self.hand_type == 'suited':
+            return self.RANKS[self.hand[1]]
+        if self.hand_type in ['offsuit', 'nosuit', 'pair']:
+            return self.RANKS[self.hand[0]]
+
+    @property
+    def index_y(self):
+        """
+        Property X-Index (The Position from left to right.)
+        "Nosuit" hands will be treated as "offsuit" hands.
+        """
+        if self.hand_type == 'suited':
+            return self.RANKS[self.hand[0]]
+        elif self.hand_type in ['offsuit', 'nosuit', 'pair']:
+            return self.RANKS[self.hand[1]]
+
     def _set_default_values(self):
-        if self.handstring:
+        if self.handstring is not None:
             self.hand_type = self.evaluate_hand_type_from_handstring()
             self.hand = self.eval_hand_from_handstring()
         elif not self.handstring:
+            if (self.hand is None) or (self.hand_type is None):
+                raise HandError('You cannot enter a hand without a hand_type.')
             self.handstring = self.eval_handstring()
 
     def eval_handstring(self):
-        if self.hand_type == 'pair':
+        if (self.hand_type == 'pair') or (self.hand_type == 'nosuit'):
             return self.hand
         elif (self.hand_type == 'suited') or (self.hand_type == 'offsuit'):
             return self.hand + self.hand_type[0]

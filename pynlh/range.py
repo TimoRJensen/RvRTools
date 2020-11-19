@@ -30,7 +30,7 @@ class RangeError(Exception):
         return f"'{self.range_string}' -> {self.msg}"
 
 
-class Range:
+class Range():
     def __init__(self, range_str):
         '''This class represents a range and is usually defined by a
         range string like 'AA,QQ-TT,AKs,QJo-Q9o,[56.0]KQs-KTs[/56.0]'.
@@ -253,7 +253,7 @@ class Range:
         return rv
 
 
-class RangeStringPart:
+class RangeStringPart():
 
     def __init__(self,
                  part: str,
@@ -293,8 +293,29 @@ class RangeStringPart:
         if not self.freq:
             self.freq = self.get_freq()
         self.part_no_freq = self.remove_freq_tag()
-        self.is_range = self.check_is_range()
         self.hands = self.get_hands()
+
+    @property
+    def is_range(self):
+        """
+        Checks if range part string represents a range of hands.
+        (e.g. QQ-TT)
+         Returns a Boolean.
+        """
+        r_id = self.range_identifier
+        if (r_id in self.part_no_freq) or ('+' in self.part_no_freq):
+            return True
+        else:
+            return False
+
+    @property
+    def is_plus_range(self):
+        if ((self.plus in self.part_no_freq)
+                and (self.part_no_freq[len(self.part_no_freq)-1:]
+                     == self.plus)):
+            return True
+        else:
+            return False
 
     def get_hands(self):
         """
@@ -328,18 +349,6 @@ class RangeStringPart:
         else:
             return False
 
-    def check_is_range(self):
-        """
-        Checks if range part string represents a range of hands.
-        (e.g. QQ-TT)
-         Returns a Boolean.
-        """
-        r_id = self.range_identifier
-        if (r_id in self.part_no_freq) or ('+' in self.part_no_freq):
-            return True
-        else:
-            return False
-
     def get_freq(self):
         """
         Extracts the frequency from a range part string that includes a
@@ -353,27 +362,31 @@ class RangeStringPart:
         else:
             return 100
 
-    def get_start_hand_for_plus_range(self, end_hand: str, suit: str):
-        end_hand_idx = (self.my_range_obj.hands_dict[end_hand][1],
-                        self.my_range_obj.hands_dict[end_hand][2])
-        end_x = end_hand_idx[0]
-        end_y = end_hand_idx[1]
-        if suit == 's':
+    def get_start_hand_for_plus_range(self,
+                                      end_hand: Hand) -> Hand:
+        end_x = end_hand.index_x
+        end_y = end_hand.index_y
+        if end_hand.hand_type == 'suited':
             start_y = end_y
             start_x = end_y + 1
-        elif suit == 'o':
+        elif end_hand.hand_type in ['offsuit', 'nosuit']:
             start_x = end_x
             start_y = end_x + 1
+        elif end_hand.hand_type == 'pair':
+            return Hand(handstring='AA')
         else:
             raise RangeError(self.part)
         d = self.my_range_obj.hands_dict.items()
         rv_list = [hand for hand, (_, x, y) in d if ((x == start_x)
                                                      and (start_y == y))]
         if len(rv_list) == 1:
-            return rv_list[0]
+            return Hand(handstring=rv_list[0])
+        else:
+            raise RangeError(self.part_no_freq)
 
     def get_hands_from_range(self):
-        """Finds hands in a hand range (like QQ-TT). Will return a list
+        """
+        Finds hands in a hand range (like QQ-TT). Will return a list
         with all hands including the starting hand (QQ)
         and the ending hand (TT).
 
@@ -386,45 +399,28 @@ class RangeStringPart:
         rv = []
         s = self.part_no_freq
         start_hand = ''
-        suit = s[2:3]
         if (self.plus not in s) and (self.range_identifier in s):
-            start_hand = s[:s.find(self.range_identifier)]
-            end_hand = s[s.find(self.range_identifier) + 1:]
+            start_hand = Hand(handstring=s[:s.find(self.range_identifier)])
+            end_hand = Hand(handstring=s[s.find(self.range_identifier) + 1:])
             if len(start_hand) != len(end_hand):
                 raise RangeError(self.part,
                                  msg=RangeError.ERR001_LEN_NOT_EQUAL)
-            elif (suit == 's') or (suit == 'o'):
-                if suit != end_hand[2]:
-                    raise RangeError(self.part)
-        elif ((self.plus in s)
-              and (s[len(s)-1:] == self.plus)):
-            end_hand = s.replace(self.plus, '')
-            if suit == 's':
-                start_hand = self.get_start_hand_for_plus_range(end_hand, suit)
-            elif suit == 'o':
-                start_hand = self.get_start_hand_for_plus_range(end_hand, suit)
-            elif ((len(s) == 3) and
-                    (s[len(s)-1:] == self.plus)):
-                start_hand = 'AA'
-            else:
+            elif start_hand.hand_type != end_hand.hand_type:
                 raise RangeError(self.part)
+        elif self.is_plus_range:
+            end_hand = Hand(handstring=s.replace(self.plus, ''))
+            start_hand = self.get_start_hand_for_plus_range(end_hand)
         else:
             raise RangeError(self.part)
-        # Index x ist 2ter value in hands_dict - y der dritte
-        start_hand_idx = (self.my_range_obj.hands_dict[start_hand][1],
-                          self.my_range_obj.hands_dict[start_hand][2])
-        start_x = start_hand_idx[0]
-        start_y = start_hand_idx[1]
+        start_x = start_hand.index_x
+        start_y = start_hand.index_y
+        end_x = end_hand.index_x
+        end_y = end_hand.index_y
 
-        end_hand_idx = (self.my_range_obj.hands_dict[end_hand][1],
-                        self.my_range_obj.hands_dict[end_hand][2])
-        end_x = end_hand_idx[0]
-        end_y = end_hand_idx[1]
-
-        rv.append(start_hand)
+        rv.append(start_hand.handstring)
         new_hands_dict = {}
         h = self.my_range_obj.hands_dict
-        if len(start_hand) == 2:
+        if start_hand.hand_type == 'pair':
             # Pair: x-index (right) must be between start and end hand
             # and y-index (down) must be between start and end hand.
             new_hands_dict = {
@@ -435,31 +431,29 @@ class RangeStringPart:
                                                       and (x < end_x)
                                                       and (y == x))
             }
-        else:
-            suit = start_hand[2].lower()
-            if suit == 's':
-                # Suited: x-index (right) must lie between start and end
-                # hand and y-index must remain the same.
-                new_hands_dict = {
-                    key: (x, y)
-                    for (key, (_, x, y)) in h.items() if ((x > start_x)
-                                                          and (x < end_x)
-                                                          and (y == start_y)
-                                                          and (y == end_y))
-                }
-            elif suit == 'o':
-                # Offsuit: y-index (down) must be between start and end
-                # hand x-index must remain the same.
-                new_hands_dict = {
-                    key: (x, y)
-                    for (key, (_, x, y)) in h.items() if ((y > start_y)
-                                                          and (y < end_y)
-                                                          and (x == start_x)
-                                                          and (x == end_x))
-                }
+        elif start_hand.hand_type == 'suited':
+            # Suited: x-index (right) must lie between start and end
+            # hand and y-index must remain the same.
+            new_hands_dict = {
+                key: (x, y)
+                for (key, (_, x, y)) in h.items() if ((x > start_x)
+                                                      and (x < end_x)
+                                                      and (y == start_y)
+                                                      and (y == end_y))
+            }
+        elif start_hand.hand_type == 'offsuit':
+            # Offsuit: y-index (down) must be between start and end
+            # hand x-index must remain the same.
+            new_hands_dict = {
+                key: (x, y)
+                for (key, (_, x, y)) in h.items() if ((y > start_y)
+                                                      and (y < end_y)
+                                                      and (x == start_x)
+                                                      and (x == end_x))
+            }
         for key in new_hands_dict:
-            rv.append(key)
-        rv.append(end_hand)
+            rv.append(Hand(handstring=key).handstring)
+        rv.append(end_hand.handstring)
         return rv
 
     def remove_freq_tag(self):

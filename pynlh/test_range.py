@@ -243,6 +243,26 @@ def test_hand_no_suit():
     assert(range.converted_range_dict['54o'] == 100)
 
 
+# def test_hand_no_suit_plus():
+#     range = Range('53+')
+#     assert(range.converted_range_dict['54s'] == 100)
+#     assert(range.converted_range_dict['54o'] == 100)
+#     assert(range.converted_range_dict['53s'] == 100)
+#     assert(range.converted_range_dict['53o'] == 100)
+#     assert(len(range.converted_range_dict) == 4)
+
+
+# def test_hand_no_suit_range():
+#     range = Range('54-52')
+#     assert(range.converted_range_dict['54s'] == 100)
+#     assert(range.converted_range_dict['54o'] == 100)
+#     assert(range.converted_range_dict['53s'] == 100)
+#     assert(range.converted_range_dict['53o'] == 100)
+#     assert(range.converted_range_dict['52s'] == 100)
+#     assert(range.converted_range_dict['52o'] == 100)
+#     assert(len(range.converted_range_dict) == 6)
+
+
 def test_split_range_str_in_parts():
     range = Range('[20]AA,KK,AKs[/20],[79]AKo[/79],97o,97s')
     split_str = range.split_range_str_in_parts()
