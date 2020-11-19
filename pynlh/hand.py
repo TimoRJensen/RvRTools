@@ -75,24 +75,31 @@ class Hand():
         "Nosuit" hands will be treated as "offsuit" hands.
         """
         if self.hand_type == 'suited':
-            return self.RANKS[self.hand[0]]
+            return self.RANKS[self.hand[0].upper()]
         elif self.hand_type in ['offsuit', 'nosuit', 'pair']:
-            return self.RANKS[self.hand[1]]
+            return self.RANKS[self.hand[1].upper()]
 
     def _set_default_values(self):
         if self.handstring is not None:
+            new_handstring = ''
+            for i, chr in enumerate(self.handstring):
+                if i < 2:
+                    new_handstring += chr.upper()
+                else:
+                    new_handstring += chr.lower()
+            self.handstring = new_handstring
             self.hand_type = self.evaluate_hand_type_from_handstring()
             self.hand = self.eval_hand_from_handstring()
-        elif not self.handstring:
+        elif self.handstring is None:
             if (self.hand is None) or (self.hand_type is None):
                 raise HandError('You cannot enter a hand without a hand_type.')
             self.handstring = self.eval_handstring()
 
     def eval_handstring(self):
         if (self.hand_type == 'pair') or (self.hand_type == 'nosuit'):
-            return self.hand
+            return self.hand.upper()
         elif (self.hand_type == 'suited') or (self.hand_type == 'offsuit'):
-            return self.hand + self.hand_type[0]
+            return self.hand.upper() + self.hand_type[0]
 
     def eval_hand_from_handstring(self):
         return self.handstring[0:2]
