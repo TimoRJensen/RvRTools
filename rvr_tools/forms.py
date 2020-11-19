@@ -1,10 +1,12 @@
 from flask_wtf import FlaskForm
-from wtforms import StringField, SubmitField, IntegerField
+from wtforms import SubmitField, IntegerField, TextAreaField
 from wtforms.validators import DataRequired, NumberRange
 
 
 class RandomizeForm(FlaskForm):
-    range_str = StringField('Range Input', validators=[DataRequired()])
+    range_str = TextAreaField('Range Input',
+                              validators=[DataRequired()],
+                              default='AA-JJ, AK-AQ')
     submit = SubmitField('Randomize')
 
 
