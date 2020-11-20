@@ -1,32 +1,36 @@
 {% extends "layout.html" %}
 {% block content %}
-<form action="" method="post">
-    {{ form.hidden_tag() }}
-    <div class="card mt-2 mb-2">
-        <h4 class="card-header">Suits Randomizer</h4>
-        <div class="card-body">
-            {{ form.range_str.label(class="form-control-label") }}
-            {% if form.range_str.errors %}
-            {{ form.range_str(class="form-control form-control-lg is-invalid mb-2" ) }}
-            <div class="invalid-feedback">
-                {% for error in form.range_str.errors %}#
-                <span>{{ error }}</span>
-                {% endfor %}
+<div class="col-md-12">
+    <form action="" method="post">
+        {{ form.hidden_tag() }}
+        <div class="card mb-2">
+            <h4 class="card-header">Suits Randomizer</h4>
+            <div class="card-body">
+                {{ form.range_str.label(class="form-control-label") }}
+                {% if form.range_str.errors %}
+                {{ form.range_str(class="form-control form-control-lg is-invalid mb-2" ) }}
+                <div class="invalid-feedback">
+                    {% for error in form.range_str.errors %}#
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.range_str(class="form-control form-control-lg mb-2") }}
+                {% endif %}
+                {{ form.submit(class="btn btn-outline-info mb-2") }}
             </div>
-            {% else %}
-            {{ form.range_str(class="form-control form-control-lg mb-2") }}
-            {% endif %}
-            {{ form.submit(class="btn btn-outline-info mb-2") }}
-        </div>
-        <div class="card-footer">
-            <div class="mb-2"><strong>Output: </strong>
-                <br>
-                {{ r }}
-                <br>
+            <div class="card-footer">
+                <div class="mb-2"><strong>Output: </strong>
+                    <br>
+                    <div id="output" class="border rounded-3 pl-2">
+                        {{ r }}
+                    </div>
+                </div>
+                <button onclick="copyElementText('output')" type="button"
+                    class="btn btn-outline-info btn-sm">Copy</button>
             </div>
-            <button onclick="copyElementText('output')" class="btn btn-outline-info btn-sm">Copy</button>
         </div>
-    </div>
+</div>
 </form>
 
 <script>

@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired, NumberRange
 class RandomizeForm(FlaskForm):
     range_str = TextAreaField('Range Input',
                               validators=[DataRequired()],
-                              default='AA-JJ, ATs+, AQo+')
+                              default='AA-JJ, [25]ATs+, AQo+[/25]')
     submit = SubmitField('Randomize')
 
 

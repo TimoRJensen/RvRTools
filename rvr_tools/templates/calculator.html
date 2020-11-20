@@ -1,96 +1,90 @@
 {% extends "layout.html" %}
 {% block content %}
-<div class="content-section">
+<div class="col-md-6">
+    <form action="" method="post" class="mb-2">
+        {{ form.hidden_tag() }}
+        <div class="card mb-2">
+            <h4 class="card-header">MDF Calculator</h4>
+            <div class="card-body">
+                {{ form.pot.label(class="form-control-label m-2") }}
+                {% if form.pot.errors %}
+                {{ form.pot(class="form-control form-control-lg is-invalid mb-2") }}
+                <div class="invalid-feedback">
+                    {% for error in form.pot.errors %}#
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.pot(class="form-control form-control-lg mb-2") }}
+                {% endif %}
+
+                {{ form.bet.label(class="form-control-label") }}
+                {% if form.bet.errors %}
+                {{ form.bet(class="form-control form-control-lg is-invalid" ) }}
+                <div class="invalid-feedback">
+                    {% for error in form.bet.errors %}#
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.bet(class="form-control form-control-lg") }}
+                {% endif %}
+
+                {{ form.invest.label(class="form-control-label") }}
+                {% if form.invest.errors %}
+                {{ form.invest(class="form-control form-control-lg is-invalid" ) }}
+                <div class="invalid-feedback">
+                    {% for error in form.invest.errors %}#
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.invest(class="form-control form-control-lg") }}
+                {% endif %}
+
+                {{ form.v_invest.label(class="form-control-label") }}
+                {% if form.v_invest.errors %}
+                {{ form.v_invest(class="form-control form-control-lg is-invalid" ) }}
+                <div class="invalid-feedback">
+                    {% for error in form.v_invest.errors %}#
+                    <span>{{ error }}</span>
+                    {% endfor %}
+                </div>
+                {% else %}
+                {{ form.v_invest(class="form-control form-control-lg mb-2") }}
+                {% endif %}
+                {{ form.submit(class="btn btn-outline-info mt-2") }}
+            </div>
+        </div>
+    </form>
     <div class="row">
         <div class="col">
-            <form action="" method="post" class="mb-2">
-                {{ form.hidden_tag() }}
-                <fieldset class="form-group ">
-                    <h4 class="card-header mb-2">MDF Calculator</h4>
-                    <div class="form-group">
-                        {{ form.pot.label(class="form-control-label m-2") }}
-                        {% if form.pot.errors %}
-                        {{ form.pot(class="form-control form-control-sm is-invalid m-2 tje-w") }}
-                        <div class="invalid-feedback">
-                            {% for error in form.pot.errors %}#
-                            <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                        {% else %}
-                        {{ form.pot(class="form-control form-control-sm m-2 tje-w") }}
-                        {% endif %}
-
-                        {{ form.bet.label(class="form-control-label") }}
-                        {% if form.bet.errors %}
-                        {{ form.bet(class="form-control form-control-lg is-invalid" ) }}
-                        <div class="invalid-feedback">
-                            {% for error in form.bet.errors %}#
-                            <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                        {% else %}
-                        {{ form.bet(class="form-control form-control-lg") }}
-                        {% endif %}
-
-                        {{ form.invest.label(class="form-control-label") }}
-                        {% if form.invest.errors %}
-                        {{ form.invest(class="form-control form-control-lg is-invalid" ) }}
-                        <div class="invalid-feedback">
-                            {% for error in form.invest.errors %}#
-                            <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                        {% else %}
-                        {{ form.invest(class="form-control form-control-lg") }}
-                        {% endif %}
-
-                        {{ form.v_invest.label(class="form-control-label") }}
-                        {% if form.v_invest.errors %}
-                        {{ form.v_invest(class="form-control form-control-lg is-invalid" ) }}
-                        <div class="invalid-feedback">
-                            {% for error in form.v_invest.errors %}#
-                            <span>{{ error }}</span>
-                            {% endfor %}
-                        </div>
-                        {% else %}
-                        {{ form.v_invest(class="form-control form-control-lg") }}
-                        {% endif %}
-                    </div>
-                </fieldset>
-                <div class="form-group">
-                    {{ form.submit(class="btn btn-outline-info") }}
+            <div class="card bg-light">
+                <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+                <h5 class="card-header">MDF:</h5>
+                <div class="card-body">
+                    <p class="card-text" id="output" style="font-size: 2rem;">{{ mdf }}%</p>
+                    <!-- <button onclick="copyElementText('output')" class="btn btn-outline-info">Copy MDF</button> -->
                 </div>
-            </form>
-            <div class="row">
-                <div class="col">
-                    <div class="card bg-light m-2">
-                        <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
-                        <h5 class="card-header">MDF:</h5>
-                        <div class="card-body">
-                            <p class="card-text" id="output" style="font-size: 2rem;">{{ mdf }}%</p>
-                            <!-- <button onclick="copyElementText('output')" class="btn btn-outline-info">Copy MDF</button> -->
-                        </div>
-                    </div>
-                </div>
-                <div class="col">
-                    <div class="card bg-light m-2">
-                        <h5 class="card-header">Alpha:</h5>
-                        <div class="card-body">
-                            <p class="card-text" id="output-alpha" style="font-size: 2rem;">{{ alpha }}%</p>
-                        </div>
-                    </div>
+            </div>
+        </div>
+        <div class="col">
+            <div class="card bg-light">
+                <h5 class="card-header">Alpha:</h5>
+                <div class="card-body">
+                    <p class="card-text" id="output-alpha" style="font-size: 2rem;">{{ alpha }}%</p>
                 </div>
             </div>
         </div>
     </div>
-    <div class="col">
-        <div class="card bg-light">
-            <h5 class="card-header">Lorem:</h5>
-            <div class="card-body">
-                Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam, explicabo? Explicabo saepe atque
-                aspernatur? Eligendi est voluptatibus repellat vitae nulla corporis, sint quis quo officiis. Mollitia
-                qui exercitationem vitae atque.
-            </div>
+</div>
+<div class="col-md-6">
+    <div class="card bg-light">
+        <h5 class="card-header">Lorem:</h5>
+        <div class="card-body">
+            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam, explicabo? Explicabo saepe atque
+            aspernatur? Eligendi est voluptatibus repellat vitae nulla corporis, sint quis quo officiis. Mollitia
+            qui exercitationem vitae atque.
         </div>
     </div>
 </div>

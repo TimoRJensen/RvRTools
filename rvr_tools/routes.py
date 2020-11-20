@@ -36,7 +36,7 @@ def randomize():
     if form.validate_on_submit():
         range_ = Range(form.range_str.data)
         range_str = range_.randomize_suits_for_range()
-        flash('successfully randomized', 'success')
+        # flash('successfully randomized', 'success')
         return render_template('randomize.html',
                                titel='Randomize',
                                form=form,
@@ -53,7 +53,7 @@ def calculator():
         invest = form.invest.data
         v_invest = form.v_invest.data
         mdf = MDF(pot=pot, bet=bet, invest=invest, villain_invest=v_invest)
-        flash('Calculated MDF and Alpha', 'success')
+        # flash('Calculated MDF and Alpha', 'success')
         return render_template('calculator.html',
                                titel='Randomize',
                                form=form,
