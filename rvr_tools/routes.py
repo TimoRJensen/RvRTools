@@ -1,8 +1,8 @@
 from os import path
 from flask import (render_template,
-                   url_for,
-                   flash,
-                   redirect,
+                   #    url_for,
+                   #    flash,
+                   #    redirect,
                    send_from_directory)
 from rvr_tools.forms import CalcMdfForm, RandomizeForm
 from rvr_tools.calculator import MDF
@@ -25,8 +25,6 @@ def home():
 
 @app.route('/about')
 def about():
-    if False:
-        return redirect(url_for('home'))
     return render_template('about.html')
 
 

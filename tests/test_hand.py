@@ -43,3 +43,4 @@ if __name__ == "__main__":
     test_get_all_combos_handstring()
     test_get_all_combos_hand_n_type()
     test_hand_index()
+    print('jup')

@@ -62,10 +62,7 @@ class Range():
         self._validate_input()
 
     def __repr__(self) -> str:
-        if self.game_uid is not None:
-            return f"Range({self.range_str})"
-        else:
-            return f"Range({self.range_str})"
+        return f"Range({self.range_str})"
 
     def __str__(self) -> str:
         return self.range_str
@@ -245,7 +242,7 @@ class Range():
             elif chr == ']':
                 if '/' in freq_str:
                     freq_end = True
-                elif '/' not in freq_str:
+                else:
                     freq = float(freq_str.replace('[', '').replace(']', ''))
                 read_freq = False
             else:
@@ -303,40 +300,33 @@ class RangeStringPart():
          Returns a Boolean.
         """
         r_id = self.range_identifier
-        if (r_id in self.part_no_freq) or ('+' in self.part_no_freq):
-            return True
-        else:
-            return False
+        return (r_id in self.part_no_freq) or ('+' in self.part_no_freq)
 
     @property
     def is_plus_range(self):
-        if ((self.plus in self.part_no_freq)
-                and (self.part_no_freq[len(self.part_no_freq)-1:]
-                     == self.plus)):
-            return True
-        else:
-            return False
+        no_freq = self.part_no_freq
+        plus = self.plus
+        return (plus in no_freq) and (no_freq[-1:] == plus)
 
     def get_hands(self):
         """
         Gets hands from range string. Returns a list of all hands.
         """
-        if not self.is_range:
-            if self.part_no_freq[0] == self.part_no_freq[1]:
-                if len(self.part_no_freq) != 2:
-                    raise RangeError(self.part,
-                                     msg=RangeError.ERR002_PAIR_LEN_NOT_2)
-                return [self.part_no_freq]
-            elif self.part_no_freq[0] != self.part_no_freq[1]:
-                hand = Hand(handstring=self.part_no_freq)
-                if hand.hand_type == 'nosuit':
-                    return [self.part_no_freq + 's', self.part_no_freq + 'o']
-                elif hand.hand_type == 'suited' or hand.hand_type == 'offsuit':
-                    return [self.part_no_freq]
-                else:
-                    raise RangeError(self.part)
-        elif self.is_range:
+        if self.is_range:
             return self.get_hands_from_range()
+        if self.part_no_freq[0] == self.part_no_freq[1]:
+            if len(self.part_no_freq) != 2:
+                raise RangeError(self.part,
+                                 msg=RangeError.ERR002_PAIR_LEN_NOT_2)
+            return [self.part_no_freq]
+        else:
+            hand = Hand(handstring=self.part_no_freq)
+            if hand.hand_type == 'nosuit':
+                return [self.part_no_freq + 's', self.part_no_freq + 'o']
+            elif hand.hand_type in ['suited', 'offsuit']:
+                return [self.part_no_freq]
+            else:
+                raise RangeError(self.part)
 
     def check_has_freq(self):
         """
@@ -344,10 +334,7 @@ class RangeStringPart():
         (e.g. [56.0]KQs-KTs[/56.0])
         Returns a boolean.
         """
-        if '[/' in self.part:
-            return True
-        else:
-            return False
+        return '[/' in self.part
 
     def get_freq(self):
         """
@@ -460,12 +447,12 @@ class RangeStringPart():
         """Removes the frequency tag from a range part string. Rerturns a
          String.
         """
-        if '[' in self.part:
-            start = '['
-            end = ']'
-            clean = ''
-            clean = self.part[self.part.find(end) + 1:]
-            clean = clean[:clean.find(start)]
-            return clean
-        else:
+        if '[' not in self.part:
             return self.part
+
+        start = '['
+        end = ']'
+        clean = ''
+        clean = self.part[self.part.find(end) + 1:]
+        clean = clean[:clean.find(start)]
+        return clean
