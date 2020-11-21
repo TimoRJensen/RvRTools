@@ -264,10 +264,22 @@ def test_hand_no_suit():
 
 
 def test_split_range_str_in_parts():
-    range = Range('[20]AA,KK,AKs[/20],[79]AKo[/79],97o,97s')
-    split_str = range.split_range_str_in_parts()
+    range_ = Range('[20]AA,KK,AKs[/20],[79]AKo[/79],97o,97s')
+    split_str = range_.split_range_str_in_parts()
     len_split_str = len(split_str)
     assert(len_split_str == 6)
+
+
+def test_randomizer():
+    """
+    Tests the Suits Randomizer
+    """
+    range_50 = Range('[50]AA[/50]')
+    range_15 = Range('[15]AA[/15]')
+    rand_combos_50 = range_50.randomize_suits_for_range(grouping='skl-mal')
+    rand_combos_15 = range_15.randomize_suits_for_range(grouping='skl-mal')
+    assert(len(rand_combos_50) == 14)
+    assert(len(rand_combos_15) == 4)
 
 
 if __name__ == "__main__":
