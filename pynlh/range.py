@@ -9,6 +9,8 @@ from random import sample
 from .hand import Hand
 
 
+#  TODO 4 derrive several RangeStringPart classes like PlusRange, DashRange,
+#         HandsRange from RangeStringPart.
 class RangeError(Exception):
     """
     Exception class of pynlh's Range class.
@@ -452,7 +454,6 @@ class RangeStringPart():
 
         start = '['
         end = ']'
-        clean = ''
         clean = self.part[self.part.find(end) + 1:]
         clean = clean[:clean.find(start)]
         return clean
