@@ -6,7 +6,7 @@ Author: GTOHOLE 11-20
 from typing import List
 from pandas import DataFrame
 from random import sample
-from pynlh import Hand
+from .hand import Hand
 
 
 class RangeError(Exception):

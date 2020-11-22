@@ -1,6 +1,11 @@
 from functools import total_ordering
 
 
+NLH_SHORTS = 'AKQJT98765432'
+NLH_NAMES = ['Ace', 'King', 'Queen', 'Jack', 'Ten', 'Nine', 'Eight', 'Seven',
+             'Six', 'Five', 'Four', 'Three', 'Deuce']
+
+
 class RankError(Exception):
     pass
 
@@ -64,10 +69,10 @@ class Rank():
         return self.order > o.order
 
 
-zipper = dict(zip('AKQJT98765432',
-                  ['Ace', 'King', 'Queen', 'Jack', 'Ten', 'Nine',
-                   'Eight', 'Seven', 'Six', 'Five', 'Four', 'Three', 'Deuce']))
+zipper = dict(zip(NLH_SHORTS, NLH_NAMES))
 
 RANKS = tuple(Rank(name=zipper[rank], short=rank, order=i + 1)
               for i, rank in enumerate(zipper)
               )
+
+RANKS = dict(zip(NLH_SHORTS, RANKS))

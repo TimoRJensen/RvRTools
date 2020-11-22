@@ -1,6 +1,6 @@
 import pytest
 
-from pynlh import Range, RangeError
+from pynlh import Range, RangeError, HandError
 
 
 def test_mixed_suit():
@@ -24,12 +24,12 @@ def test_omited_suit_end():
 
 
 def test_omited_rank_start():
-    with pytest.raises(RangeError):
+    with pytest.raises(HandError):
         Range('Qs-Q9s')
 
 
 def test_omited_rank_end():
-    with pytest.raises(RangeError):
+    with pytest.raises(HandError):
         Range('Q9o-Qo')
 
 

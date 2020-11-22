@@ -1,8 +1,13 @@
+from .rank import RANKS
+
+
 """
 Version: 0.02
 
 Author: GTOHOLE 11-20
 """
+
+
 SUITS = ["s", "c", "d", "h"]
 
 
@@ -22,29 +27,27 @@ class HandError(Exception):
 
 
 class Hand():
-    RANKS = {'A': 1,
-             'K': 2,
-             'Q': 3,
-             'J': 4,
-             'T': 5,
-             '9': 6,
-             '8': 7,
-             '7': 8,
-             '6': 9,
-             '5': 10,
-             '4': 11,
-             '3': 12,
-             '2': 13,
-             }
 
     def __init__(self,
                  hand: str = None,
                  hand_type: str = None,
-                 handstring: str = None):
+                 handstring: str = None,
+                 ) -> None:
+        """
+        Pynlh's Hand class.
+        Can be instantiated either by giving it a "handstring" like "AKs"
+        or a "hand" like "AK" and a "hand_type" like "offsuit", "suited,
+        "nosuit" or "pair".
+        """
         self.hand = hand
         self.hand_type = hand_type
         self.handstring = handstring
         self._set_default_values()
+        try:
+            self.rank1 = RANKS[self.hand[0]]
+            self.rank2 = RANKS[self.hand[1]]
+        except KeyError or TypeError:
+            raise HandError(self.handstring)
         self.all_combos = self.get_all_combos()
         self.class_skl_mal = self.get_sklansky_malmuth_handclass()
 
@@ -64,20 +67,20 @@ class Hand():
         "Nosuit" hands will be treated as "offsuit" hands.
         """
         if self.hand_type == 'suited':
-            return self.RANKS[self.hand[1]]
+            return self.rank2.order
         if self.hand_type in ['offsuit', 'nosuit', 'pair']:
-            return self.RANKS[self.hand[0]]
+            return self.rank1.order
 
     @property
     def index_y(self):
         """
-        Property X-Index (The Position from left to right.)
+        Property Y-Index (The Position top left to bottom.)
         "Nosuit" hands will be treated as "offsuit" hands.
         """
         if self.hand_type == 'suited':
-            return self.RANKS[self.hand[0].upper()]
+            return self.rank1.order
         elif self.hand_type in ['offsuit', 'nosuit', 'pair']:
-            return self.RANKS[self.hand[1].upper()]
+            return self.rank2.order
 
     def _set_default_values(self):
         if self.handstring is not None:
@@ -90,6 +93,8 @@ class Hand():
         else:
             if (self.hand is None) or (self.hand_type is None):
                 raise HandError('You cannot enter a hand without a hand_type.')
+            self.hand = self.hand.upper()
+            self.hand_type = self.hand_type.lower()
             self.handstring = self.eval_handstring()
 
     def eval_handstring(self):

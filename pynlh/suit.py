@@ -1,5 +1,11 @@
 from functools import total_ordering
 
+from .rank import NLH_NAMES, NLH_SHORTS
+
+
+NLH_SHORTS = 'csdh'
+NLH_NAMES = ['Club', 'Spade', 'Diamond', 'Heart']
+
 
 class SuitError(Exception):
     pass
@@ -28,5 +34,7 @@ class Suit():
         return self.name
 
 
-zipper = dict(zip('csdh', ['Club', 'Spade', 'Diamond', 'Heart']))
+zipper = dict(zip(NLH_SHORTS, NLH_NAMES))
 SUITS = tuple(Suit(zipper[short], short) for short in zipper)
+
+SUITS = dict(zip(NLH_SHORTS, SUITS))
