@@ -1,14 +1,11 @@
 from .rank import RANKS
-
+from .suit import SUITS
 
 """
 Version: 0.02
 
 Author: GTOHOLE 11-20
 """
-
-
-SUITS = ["s", "c", "d", "h"]
 
 
 class HandError(Exception):
