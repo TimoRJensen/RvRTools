@@ -21,13 +21,13 @@ class RangeError(Exception):
                             2. - ERR002"""
     ERR003_NOT_VALID_CHAR = ' is not a valid character for a range - ERR003'
 
-    def __init__(self, range_string, msg='Not a valid range!'):
-        self.range_string = range_string
+    def __init__(self, range_str: str, msg: str = 'Not a valid range!'):
+        self.range_str = range_str
         self.msg = msg
         super().__init__(self.msg)
 
     def __str__(self):
-        return f"'{self.range_string}' -> {self.msg}"
+        return f"'{self.range_str}' -> {self.msg}"
 
 
 class Range():
