@@ -25,6 +25,7 @@ class HandError(Exception):
     def __str__(self):
         return f"'{self.handstring}' -> {self.msg}"
 
+# TODO a Hand ordering à la 22 > AKs > AK > AKo > AQs
 
 class Hand():
 
