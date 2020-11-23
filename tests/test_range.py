@@ -1,6 +1,6 @@
 import pytest
 
-from pynlh import Range, RangeError, HandError
+from pynlh import Range, RangeError, HandError, RangeStringPart
 
 
 def test_mixed_suit():
@@ -265,9 +265,25 @@ def test_hand_no_suit():
 
 def test_split_range_str_in_parts():
     range_ = Range('[20]AA,KK,AKs[/20],[79]AKo[/79],97o,97s')
-    split_str = range_.split_range_str_in_parts()
-    len_split_str = len(split_str)
-    assert(len_split_str == 6)
+    assert(len(range_.split_range_str_in_parts()) == 6)
+
+
+def test_part_combos_count():
+    range_part_hand = RangeStringPart('[20]AA[/20]')
+    range_part_dash = RangeStringPart('[79]AKo-AJo[/79]')
+    range_part_plus = RangeStringPart('[79]QTs+[/79]')
+    assert(len(range_part_hand.combos) == 6)
+    assert(len(range_part_dash.combos) == 36)
+    assert(len(range_part_plus.combos) == 8)
+
+
+def test_range_combos_count():
+    range_part_hands = Range('[20]AA,KK,AK[/20]')
+    range_part_dash = Range('[79]AKo-AJo[/79],AA')
+    range_part_plus = Range('[79]QTs+[/79],[99]KTs+[/99]')
+    assert(len(range_part_hands.combos) == 28)
+    assert(len(range_part_dash.combos) == 42)
+    assert(len(range_part_plus.combos) == 20)
 
 
 def test_randomizer():

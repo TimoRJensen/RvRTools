@@ -33,7 +33,7 @@ class RangeError(Exception):
 
 
 class Range():
-    def __init__(self, range_str):
+    def __init__(self, range_str: str):
         '''This class represents a range and is usually defined by a
         range string like 'AA,QQ-TT,AKs,QJo-Q9o,[56.0]KQs-KTs[/56.0]'.
 
@@ -58,10 +58,18 @@ class Range():
         ";" will be replaced by a ","
         '''
         self.range_str = range_str.replace(";", ",")
-        self.parts = []
+        self.parts: List[RangeStringPart] = []
         self.hands_dict = self.build_0freq_hands_dict()
         self.converted_range_dict = self.convert_range_str_to_dict()
         self._validate_input()
+
+    @property
+    def combos(self):
+        """
+        Collects all Combo objects from RangeStringPart objects and
+        consolidates them in one list, that is returned
+        """
+        return [combo for part in self.parts for combo in part.combos]
 
     def __repr__(self) -> str:
         return f"Range({self.range_str})"
@@ -127,7 +135,7 @@ class Range():
             hand = Hand(handstring=h)
             hand_dict = {'hand': hand.handstring,
                          'group': hand.class_skl_mal,
-                         'combos': hand.all_combos,
+                         'combos': hand.all_combos_str,
                          'freq': f}
             hands.append(hand_dict)
         df = DataFrame(hands)
@@ -148,9 +156,10 @@ class Range():
         str_no_space = self.range_str.replace(" ", "")
         str_split = self.split_range_str_in_parts(str_no_space)
         for part_str in str_split:
-            self.parts.append(RangeStringPart(part_str, my_range_obj=self))
+            self.parts.append(RangeStringPart(part=part_str,
+                                              my_range_obj=self))
         for part in self.parts:
-            for h in part.hands:
+            for h in part.hands_str:
                 rv[h] = part.freq
         return rv
 
@@ -177,9 +186,9 @@ class Range():
         if grouping == 'by_hand':
             for h, f in self.converted_range_dict.items():
                 hand = Hand(handstring=h)
-                no_of_combos = (f/100) * len(hand.all_combos)
+                no_of_combos = (f/100) * len(hand.all_combos_str)
                 combos_list.append(
-                    sample(hand.all_combos, round(no_of_combos)))
+                    sample(hand.all_combos_str, round(no_of_combos)))
             for x in combos_list:
                 for combo in x:
                     rv += combo + combo_delimiter
@@ -292,7 +301,15 @@ class RangeStringPart():
         if not self.freq:
             self.freq = self.get_freq()
         self.part_no_freq = self.remove_freq_tag()
-        self.hands = self.get_hands()
+        self.hands_str = self.get_hands_str()
+
+    @property
+    def combos(self):
+        """
+        Collects all Combo objects from Hand objects and consolidates them
+        in one list, that is returned
+        """
+        return [combo for hand in self.hands for combo in hand.combos]
 
     @property
     def is_range(self):
@@ -310,7 +327,12 @@ class RangeStringPart():
         plus = self.plus
         return (plus in no_freq) and (no_freq[-1:] == plus)
 
-    def get_hands(self):
+    @property
+    def hands(self) -> List[Hand]:
+        return [Hand(handstring=hand, freq=self.freq)
+                for hand in self.hands_str]
+
+    def get_hands_str(self):
         """
         Gets hands from range string. Returns a list of all hands.
         """

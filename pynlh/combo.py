@@ -1,10 +1,14 @@
+from .rank import Rank
+from .suit import Suit
+
+
 class ComboError(Exception):
-    """
-    Exception class pf pynlh's Combo class.
-    """
     pass
 
     def __init__(self, combo_str: str, msg: str = 'Not a valid combo!'):
+        """
+        Exception class pf pynlh's Combo class.
+        """
         self.combo_str = combo_str
         self.msg = msg
         super().__init__(self.msg)
@@ -16,18 +20,20 @@ class ComboError(Exception):
 class Combo():
     def __init__(self,
                  combo_str: str = None,
-                 hand: str = None,
-                 suit1: str = None,
-                 suit2: str = None,
+                 rank1: Rank = None,
+                 rank2: Rank = None,
+                 suit1: Suit = None,
+                 suit2: Suit = None,
                  freq: float = 0.00,
                  ) -> None:
         """
         Pynlh's Combo class object.
-        Can be isntanciated either giving it a combo_str like "Ac5d" or a hand
-        string like "AK" and two suits "c" "d".
+        Can be isntanciated either giving it a combo_str like "Ac5d" or
+        via Suits and Rank objects.
         """
         self.combo_str = combo_str
-        self.hand = hand
+        self.rank1 = rank1
+        self.rank2 = rank2
         self.suit1 = suit1
         self.suit2 = suit2
         self.freq = freq

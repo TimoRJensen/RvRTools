@@ -1,5 +1,8 @@
+from typing import List
+
 from .rank import RANKS
 from .suit import SUITS
+from .combo import Combo
 
 """
 Version: 0.02
@@ -29,6 +32,7 @@ class Hand():
                  hand: str = None,
                  hand_type: str = None,
                  handstring: str = None,
+                 freq: float = 100.00,
                  ) -> None:
         """
         Pynlh's Hand class.
@@ -39,13 +43,15 @@ class Hand():
         self.hand = hand
         self.hand_type = hand_type
         self.handstring = handstring
+        self.freq = freq
         self._set_default_values()
         try:
             self.rank1 = RANKS[self.hand[0]]
             self.rank2 = RANKS[self.hand[1]]
         except KeyError or TypeError:
             raise HandError(self.handstring)
-        self.all_combos = self.get_all_combos()
+        self.all_combos_str = self.get_all_combos_str()
+        self.combos = self.get_combos()
         self.class_skl_mal = self.get_sklansky_malmuth_handclass()
 
     def __repr__(self) -> str:
@@ -120,7 +126,7 @@ class Hand():
             elif suit == "o":
                 return "offsuit"
 
-    def get_all_combos(self):
+    def get_all_combos_str(self):
         cards_list = []
         rv = []
         for suit in SUITS:
@@ -141,6 +147,13 @@ class Hand():
         elif self.hand_type == 'nosuit':
             rv = [c for c in rv if (c[0] != c[2])]
         return rv
+
+    def get_combos(self) -> List[Combo]:
+        if self.freq == 100:
+            return [Combo(combo_str=combo) for combo in self.all_combos_str]
+        else:
+            return [Combo(combo_str=combo, freq=self.freq)
+                    for combo in self.all_combos_str]
 
     def get_sklansky_malmuth_handclass(self):
         if self.handstring in ["AA", "AKs", "KK", "QQ", "JJ"]:
