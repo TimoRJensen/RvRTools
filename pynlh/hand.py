@@ -27,6 +27,7 @@ class HandError(Exception):
 
 # TODO a Hand ordering à la 22 > AKs > AK > AKo > AQs
 
+
 class Hand():
 
     def __init__(self,
@@ -51,12 +52,10 @@ class Hand():
             self.rank2 = RANKS[self.hand[1]]
         except KeyError or TypeError:
             raise HandError(self.handstring)
-        self.all_combos_str = self.get_all_combos_str()
-        self.combos = self.get_combos()
         self.class_skl_mal = self.get_sklansky_malmuth_handclass()
 
     def __repr__(self) -> str:
-        return f"Hand({self.hand_uid}, {self.hand}, {self.hand_type}"
+        return f"Hand({self.hand}, {self.hand_type})"
 
     def __str__(self) -> str:
         return(self.handstring)
@@ -127,7 +126,8 @@ class Hand():
             elif suit == "o":
                 return "offsuit"
 
-    def get_all_combos_str(self):
+    @property
+    def all_combos_str(self):
         cards_list = []
         rv = []
         for suit in SUITS:
@@ -149,7 +149,8 @@ class Hand():
             rv = [c for c in rv if (c[0] != c[2])]
         return rv
 
-    def get_combos(self) -> List[Combo]:
+    @property
+    def combos(self) -> List[Combo]:
         if self.freq == 100:
             return [Combo(combo_str=combo) for combo in self.all_combos_str]
         else:
