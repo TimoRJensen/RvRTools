@@ -7,29 +7,7 @@ from typing import List
 from pandas import DataFrame
 from random import sample
 from .hand import Hand
-
-
-#  TODO 4 derrive several RangeStringPart classes like PlusRange, DashRange,
-#         HandsRange from RangeStringPart.
-class RangeError(Exception):
-    """
-    Exception class of pynlh's Range class.
-    """
-    pass
-
-    ERR001_LEN_NOT_EQUAL = """Length of starting hand is not equal to the
-                           ending hand of this Range Part. ERR001"""
-    ERR002_PAIR_LEN_NOT_2 = """The lengh of a pair Range Part must be exactly
-                            2. - ERR002"""
-    ERR003_NOT_VALID_CHAR = ' is not a valid character for a range - ERR003'
-
-    def __init__(self, range_str: str, msg: str = 'Not a valid range!'):
-        self.range_str = range_str
-        self.msg = msg
-        super().__init__(self.msg)
-
-    def __str__(self):
-        return f"'{self.range_str}' -> {self.msg}"
+from .rank import RANKS
 
 
 class Range():
@@ -86,8 +64,8 @@ class Range():
                 err_msg = ch + RangeError.ERR003_NOT_VALID_CHAR
                 raise RangeError(self.range_str, msg=err_msg)
 
-    @classmethod
-    def _flatten_l_of_ls(cls, x):
+    @staticmethod
+    def _flatten_l_of_ls(x):
         """
         Helperfunction thats flattens lists of lists.
         """
@@ -97,8 +75,8 @@ class Range():
                 rv.append(itm)
         return rv
 
-    @classmethod
-    def build_0freq_hands_dict(cls):
+    @staticmethod
+    def build_0freq_hands_dict():
         """
         Creates a dictionary with all No-Limit Holdem hands.
         (like {'AA': [0, 1, 1], 'AKo': [0, 1, 2] ...} ) Hands are the keys and
@@ -106,12 +84,9 @@ class Range():
         Frequency will always be 0.
         """
         hands_dict = {}
-        handranks = [
-            "A", "K", "Q", "J", "T", "9", "8", "7", "6", "5", "4", "3", "2"
-        ]
         i = 0
-        for n, rank in enumerate(handranks):
-            for n2, rank2 in enumerate(handranks):
+        for n, rank in enumerate(RANKS):
+            for n2, rank2 in enumerate(RANKS):
                 i += 1
                 if rank == rank2:
                     # hand_type = "pair"
@@ -259,6 +234,29 @@ class Range():
             else:
                 read_part = True
         return rv
+
+
+#  TODO 4 derrive several RangeStringPart classes like PlusRange, DashRange,
+#         HandsRange from RangeStringPart.
+class RangeError(Exception):
+    """
+    Exception class of pynlh's Range class.
+    """
+    pass
+
+    ERR001_LEN_NOT_EQUAL = """Length of starting hand is not equal to the
+                           ending hand of this Range Part. ERR001"""
+    ERR002_PAIR_LEN_NOT_2 = """The lengh of a pair Range Part must be exactly
+                            2. - ERR002"""
+    ERR003_NOT_VALID_CHAR = ' is not a valid character for a range - ERR003'
+
+    def __init__(self, range_str: str, msg: str = 'Not a valid range!'):
+        self.range_str = range_str
+        self.msg = msg
+        super().__init__(self.msg)
+
+    def __str__(self):
+        return f"'{self.range_str}' -> {self.msg}"
 
 
 class RangeStringPart():

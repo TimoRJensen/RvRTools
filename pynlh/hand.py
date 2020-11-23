@@ -16,6 +16,9 @@ class HandError(Exception):
     Exception class of pynlh's Hand class.
     """
     pass
+    # TODO a Hand ordering à la 22 > AKs > AK > AKo > AQs
+    # TODO create a combos_freq_applied property returning all combos with the
+    #  hands freq applied (randomly picked voa probability)
 
     def __init__(self, handstring, msg='Not a valid hand!'):
         self.handstring = handstring
@@ -24,8 +27,6 @@ class HandError(Exception):
 
     def __str__(self):
         return f"'{self.handstring}' -> {self.msg}"
-
-# TODO a Hand ordering à la 22 > AKs > AK > AKo > AQs
 
 
 class Hand():
@@ -53,78 +54,6 @@ class Hand():
         except KeyError or TypeError:
             raise HandError(self.handstring)
         self.class_skl_mal = self.get_sklansky_malmuth_handclass()
-
-    def __repr__(self) -> str:
-        return f"Hand({self.hand}, {self.hand_type})"
-
-    def __str__(self) -> str:
-        return(self.handstring)
-
-    def __len__(self) -> int:
-        return len(self.handstring)
-
-    @property
-    def index_x(self):
-        """
-        Property X-Index (The Position from left to right.)
-        "Nosuit" hands will be treated as "offsuit" hands.
-        """
-        if self.hand_type == 'suited':
-            return self.rank2.order
-        if self.hand_type in ['offsuit', 'nosuit', 'pair']:
-            return self.rank1.order
-
-    @property
-    def index_y(self):
-        """
-        Property Y-Index (The Position top left to bottom.)
-        "Nosuit" hands will be treated as "offsuit" hands.
-        """
-        if self.hand_type == 'suited':
-            return self.rank1.order
-        elif self.hand_type in ['offsuit', 'nosuit', 'pair']:
-            return self.rank2.order
-
-    def _set_default_values(self):
-        if self.handstring is not None:
-            new_handstring = ''
-            for i, chr in enumerate(self.handstring):
-                new_handstring += chr.upper() if i < 2 else chr.lower()
-            self.handstring = new_handstring
-            self.hand_type = self.evaluate_hand_type_from_handstring()
-            self.hand = self.eval_hand_from_handstring()
-        else:
-            if (self.hand is None) or (self.hand_type is None):
-                raise HandError('You cannot enter a hand without a hand_type.')
-            self.hand = self.hand.upper()
-            self.hand_type = self.hand_type.lower()
-            self.handstring = self.eval_handstring()
-
-    def eval_handstring(self):
-        if self.hand_type in ['pair', 'nosuit']:
-            return self.hand.upper()
-        elif self.hand_type in ['suited', 'offsuit']:
-            return self.hand.upper() + self.hand_type[0]
-
-    def eval_hand_from_handstring(self):
-        return self.handstring[0:2]
-
-    def evaluate_hand_type_from_handstring(self):
-        """
-        Evaluates the hand type (suited, offsuit, pair or nosuit) from a given
-        handstring (self.handstring).
-        """
-        hand_str = self.handstring
-        if (len(hand_str) == 2) and (hand_str[0] == hand_str[1]):
-            return "pair"
-        elif len(hand_str) == 2:
-            return "nosuit"
-        else:
-            suit = hand_str[2].lower()
-            if suit == "s":
-                return "suited"
-            elif suit == "o":
-                return "offsuit"
 
     @property
     def all_combos_str(self):
@@ -156,6 +85,78 @@ class Hand():
         else:
             return [Combo(combo_str=combo, freq=self.freq)
                     for combo in self.all_combos_str]
+
+    @property
+    def index_x(self):
+        """
+        Property X-Index (The Position from left to right.)
+        "Nosuit" hands will be treated as "offsuit" hands.
+        """
+        if self.hand_type == 'suited':
+            return self.rank2.order
+        if self.hand_type in ['offsuit', 'nosuit', 'pair']:
+            return self.rank1.order
+
+    @property
+    def index_y(self):
+        """
+        Property Y-Index (The Position top left to bottom.)
+        "Nosuit" hands will be treated as "offsuit" hands.
+        """
+        if self.hand_type == 'suited':
+            return self.rank1.order
+        elif self.hand_type in ['offsuit', 'nosuit', 'pair']:
+            return self.rank2.order
+
+    def __repr__(self) -> str:
+        return f"Hand({self.hand}, {self.hand_type})"
+
+    def __str__(self) -> str:
+        return(self.handstring)
+
+    def __len__(self) -> int:
+        return len(self.handstring)
+
+    def _set_default_values(self):
+        if self.handstring is not None:
+            new_handstring = ''
+            for i, chr in enumerate(self.handstring):
+                new_handstring += chr.upper() if i < 2 else chr.lower()
+            self.handstring = new_handstring
+            self.hand_type = self.evaluate_hand_type_from_handstring()
+            self.hand = self.eval_hand_from_handstring()
+        else:
+            if (self.hand is None) or (self.hand_type is None):
+                raise HandError('You cannot enter a hand without a hand_type.')
+            self.hand = self.hand.upper()
+            self.hand_type = self.hand_type.lower()
+            self.handstring = self.eval_handstring()
+
+    def eval_hand_from_handstring(self):
+        return self.handstring[0:2]
+
+    def eval_handstring(self):
+        if self.hand_type in ['pair', 'nosuit']:
+            return self.hand.upper()
+        elif self.hand_type in ['suited', 'offsuit']:
+            return self.hand.upper() + self.hand_type[0]
+
+    def evaluate_hand_type_from_handstring(self):
+        """
+        Evaluates the hand type (suited, offsuit, pair or nosuit) from a given
+        handstring (self.handstring).
+        """
+        hand_str = self.handstring
+        if (len(hand_str) == 2) and (hand_str[0] == hand_str[1]):
+            return "pair"
+        elif len(hand_str) == 2:
+            return "nosuit"
+        else:
+            suit = hand_str[2].lower()
+            if suit == "s":
+                return "suited"
+            elif suit == "o":
+                return "offsuit"
 
     def get_sklansky_malmuth_handclass(self):
         if self.handstring in ["AA", "AKs", "KK", "QQ", "JJ"]:
