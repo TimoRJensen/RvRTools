@@ -16,9 +16,6 @@ class HandError(Exception):
     Exception class of pynlh's Hand class.
     """
     pass
-    # TODO a Hand ordering à la 22 > AKs > AK > AKo > AQs
-    # TODO create a combos_freq_applied property returning all combos with the
-    #  hands freq applied (randomly picked voa probability)
 
     def __init__(self, handstring, msg='Not a valid hand!'):
         self.handstring = handstring
@@ -31,6 +28,7 @@ class HandError(Exception):
 
 class Hand():
 
+    # TODO a Hand ordering à la 22 > AKs > AK > AKo > AQs
     def __init__(self,
                  hand: str = None,
                  hand_type: str = None,
@@ -190,3 +188,6 @@ class Hand():
             return 8
         else:
             return 9
+
+    def pick_combos(self) -> List[Combo]:
+        return [combo for combo in self.combos if combo.pick()]

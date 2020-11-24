@@ -1,6 +1,9 @@
+import matplotlib.pyplot as plt
+import pandas as pd
 import pytest
+from timeit import timeit
 
-from pynlh import Range, RangeError, HandError, RangeStringPart
+from pynlh import Range, RangeError, HandError, RangeStringPart, timer
 
 
 def test_mixed_suit():
@@ -286,6 +289,30 @@ def test_range_combos_count():
     assert(len(range_part_plus.combos) == 20)
 
 
+def test_part_pick_combo():
+    range_part_hand = RangeStringPart('[20]AA[/20]')
+    assert(cycle_pick_combos_for_part(range_part_hand))
+    range_part_dash = RangeStringPart('[79]AKo-AJo[/79]')
+    assert(cycle_pick_combos_for_part(range_part_dash))
+    range_part_plus = RangeStringPart('[99]KTs+[/99]')
+    assert(cycle_pick_combos_for_part(range_part_plus))
+
+
+def cycle_pick_combos_for_part(part_: RangeStringPart):
+    CYCLES = 1000
+    TOL = 0.1
+    combos = part_.combos
+    bottom = (part_.freq / 100) * len(combos) - TOL
+    top = (part_.freq / 100) * len(combos) + TOL
+    picks = []
+    for _ in range(CYCLES):
+        x = len(part_.pick_combos())
+        picks.append(x)
+    count_picks = pd.DataFrame(picks, columns=['picks'])
+    mean = count_picks.picks.mean()
+    return top > mean > bottom
+
+
 def test_randomizer():
     """
     Tests the Suits Randomizer
@@ -305,5 +332,7 @@ if __name__ == "__main__":
     # test_range_hands_freq()
     # test_range_ranges_freq()
     # test_range_plus_ranges_freq(True)
-    test_split_range_str_in_parts()
+    # test_split_range_str_in_parts()
+    test_part_pick_combo()
+    # plt.show()
     # test_mixed_rank()

@@ -465,6 +465,9 @@ class RangeStringPart():
         rv.append(end_hand.handstring)
         return rv
 
+    def pick_combos(self):
+        return [combo for hand in self.hands for combo in hand.pick_combos()]
+
     def remove_freq_tag(self):
         """Removes the frequency tag from a range part string. Rerturns a
          String.

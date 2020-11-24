@@ -95,6 +95,22 @@ def test_hand_index():
     assert(hand_nosuit.index_x == 6 and hand_nosuit.index_y == 13)
 
 
+def test_pick_combos():
+    hand_offsuit = Hand(handstring='QJo', freq=20)
+    hand_suited = Hand(handstring='QJs', freq=20)
+    hand_pair = Hand(handstring='22', freq=20)
+    hand_nosuit = Hand(handstring='92', freq=20)
+
+    assert(len(hand_offsuit.pick_combos()) < 13 or hand_offsuit == [])
+    assert(hand_offsuit.pick_combos() is not None)
+    assert(len(hand_suited.pick_combos()) < 5 or hand_suited == [])
+    assert(hand_suited.pick_combos() is not None)
+    assert(len(hand_pair.pick_combos()) < 7 or hand_pair == [])
+    assert(hand_pair.pick_combos() is not None)
+    assert(len(hand_nosuit.pick_combos()) < 17 or hand_offsuit == [])
+    assert(hand_nosuit.pick_combos() is not None)
+
+
 if __name__ == "__main__":
     test_get_all_combos_str_handstring()
     test_get_all_combos_str_hand_n_type()
