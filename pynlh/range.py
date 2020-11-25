@@ -138,6 +138,9 @@ class Range():
                 rv[h] = part.freq
         return rv
 
+    def pick_combos(self):
+        return [combo for part in self.parts for combo in part.pick_combos()]
+
     def randomize_suits_for_range(self,
                                   grouping='skl-mal',
                                   combo_delimiter=',',
@@ -329,6 +332,12 @@ class RangeStringPart():
     def hands(self) -> List[Hand]:
         return [Hand(handstring=hand, freq=self.freq)
                 for hand in self.hands_str]
+
+    def __repr__(self) -> str:
+        return f"{self.__class__.__name__}(part={self.part})"
+
+    def __str__(self) -> str:
+        return self.part
 
     def get_hands_str(self):
         """
