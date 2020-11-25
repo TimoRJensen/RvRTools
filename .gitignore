@@ -133,3 +133,6 @@ dmypy.json
 
 #WinMerge
 *.bak
+
+#testing stuff
+foo.py
