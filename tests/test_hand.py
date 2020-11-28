@@ -121,15 +121,18 @@ def test_ordering():
     AQs = Hand("AQs")
     AJo = Hand("AJo")
     ten_nine = Hand("T9")
-    assert((deuces > AKs > AK > AKo))
+    ten_nine_off = Hand("T9o")
+    ten_eight_suited = Hand("T8s")
+    assert(deuces > AKs > AK > AKo)
     assert(deuces > AKs > AK > AKo > AQs > AJo > ten_nine)
-    assert(deuces > AKs > AK > AKo > AQs > ten_nine > AJo)
     assert(AKo <= AK)
     assert(AKs <= AKs)
-    assert(threes < deuces)
+    assert(threes > deuces)
     assert(deuces2 >= deuces)
-    assert(ten_nine > AJo)
-
+    assert(ten_nine < AJo)
+    assert(ten_nine_off < ten_nine)
+    assert(ten_nine_off > ten_eight_suited)
+    assert(ten_eight_suited < ten_nine)
 
 
 if __name__ == "__main__":

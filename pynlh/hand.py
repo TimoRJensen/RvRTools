@@ -114,12 +114,14 @@ class Hand():
         if not isinstance(o, Hand):
             return NotImplemented
 
-        if self.rank1 < o.rank1:
-            return False
-        elif self.hand_type == 'pair' and o.hand_type != 'pair':
+        if self.hand_type == 'pair' and o.hand_type != 'pair':
             return True
+        elif self.rank1 < o.rank1:
+            return False
         elif self.rank1 > o.rank1:
             return True
+        elif self.rank1 == o.rank1 and self.rank2 < o.rank2:
+            return False
         elif self.rank1 == o.rank1 and self.rank2 > o.rank2:
             return True
         elif ((self.hand_type == 'suited') and
