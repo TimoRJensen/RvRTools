@@ -1,3 +1,4 @@
+from functools import total_ordering
 from typing import List
 
 from .rank import RANKS
@@ -26,13 +27,14 @@ class HandError(Exception):
         return f"'{self.handstring}' -> {self.msg}"
 
 
+@total_ordering
 class Hand():
 
     # TODO a Hand ordering à la 22 > AKs > AK > AKo > AQs
     def __init__(self,
+                 handstring: str = None,
                  hand: str = None,
                  hand_type: str = None,
-                 handstring: str = None,
                  freq: float = 100.00,
                  ) -> None:
         """
@@ -103,14 +105,37 @@ class Hand():
         elif self.hand_type in ['offsuit', 'nosuit', 'pair']:
             return self.rank2.order
 
-    def __repr__(self) -> str:
-        return f"Hand({self.hand}, {self.hand_type})"
+    def __eq__(self, o: object) -> bool:
+        if not isinstance(o, Hand):
+            return NotImplemented
+        return self.handstring == o.handstring
 
-    def __str__(self) -> str:
-        return(self.handstring)
+    def __gt__(self, o: object) -> bool:
+        if not isinstance(o, Hand):
+            return NotImplemented
+
+        if self.hand_type == 'pair' and o.hand_type != 'pair':
+            return True
+        elif self.rank1 > o.rank1:
+            return True
+        elif self.rank1 == o.rank1 and self.rank2 > o.rank2:
+            return True
+        elif ((self.hand_type == 'suited') and
+              (o.hand_type in ['offsuit', 'nosuit'])):
+            return True
+        elif self.hand_type == 'nosuit' and o.hand_type == 'offsuit':
+            return True
+        else:
+            return False
 
     def __len__(self) -> int:
         return len(self.handstring)
+
+    def __repr__(self) -> str:
+        return f"Hand('{self.handstring}')"
+
+    def __str__(self) -> str:
+        return(self.handstring)
 
     def _set_default_values(self):
         if self.handstring is not None:
@@ -186,5 +211,9 @@ class Hand():
         else:
             return 9
 
-    def pick_combos(self) -> List[Combo]:
-        return [combo for combo in self.combos if combo.pick()]
+    def pick_combos(self, as_str=False) -> List[Combo]:
+        if not as_str:
+            return [combo for combo in self.combos if combo.pick()]
+
+        combos_list = [str(combo) for combo in self.combos if combo.pick()]
+        return ','.join(combos_list)
