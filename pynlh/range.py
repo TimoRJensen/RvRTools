@@ -36,7 +36,7 @@ class Range():
         ";" will be replaced by a ","
         '''
         self.range_str = range_str.replace(";", ",")
-        self.parts: List[RangeStringPart] = []
+        self.parts: List[RangePart] = []
         self.hands_dict = self.build_0freq_hands_dict()
         self.converted_range_dict = self.convert_range_str_to_dict()
         self._validate_input()
@@ -44,7 +44,7 @@ class Range():
     @property
     def combos(self):
         """
-        Collects all Combo objects from RangeStringPart objects and
+        Collects all Combo objects from RangePart objects and
         consolidates them in one list, that is returned
         """
         return [combo for part in self.parts for combo in part.combos]
@@ -131,15 +131,21 @@ class Range():
         str_no_space = self.range_str.replace(" ", "")
         str_split = self.split_range_str_in_parts(str_no_space)
         for part_str in str_split:
-            self.parts.append(RangeStringPart(part=part_str,
+            self.parts.append(RangePart(part=part_str,
                                               my_range_obj=self))
         for part in self.parts:
             for h in part.hands_str:
                 rv[h] = part.freq
         return rv
 
-    def pick_combos(self):
-        return [combo for part in self.parts for combo in part.pick_combos()]
+    def pick_combos(self, as_str=False):
+        if not as_str:
+            return [combo for part in self.parts
+                    for combo in part.pick_combos()]
+
+        combos_list = [str(combo) for part in self.parts
+                       for combo in part.pick_combos()]
+        return ','.join(combos_list)
 
     def randomize_suits_for_range(self,
                                   grouping='skl-mal',
@@ -239,8 +245,6 @@ class Range():
         return rv
 
 
-#  TODO 4 derrive several RangeStringPart classes like PlusRange, DashRange,
-#         HandsRange from RangeStringPart.
 class RangeError(Exception):
     """
     Exception class of pynlh's Range class.
@@ -262,17 +266,16 @@ class RangeError(Exception):
         return f"'{self.range_str}' -> {self.msg}"
 
 
-class RangeStringPart():
+class RangePart():
 
     def __init__(self,
                  part: str,
                  my_range_obj: Range = None,
-
                  freq: float = None,
                  range_identifier: str = '-',
                  plus: str = '+'):
         """This class represents parts (like 'AA' or 'QQ-TT') of a
-        range string (like 'AA,QQ-TT,AKs,QJo-Q9o,[56.0]KQs-KTs[/56.0]')
+        range (like 'AA,QQ-TT,AKs,QJo-Q9o,[56.0]KQs-KTs[/56.0]')
         separeted by commas. These can then be evaluated to find all the hands
         represented by this range string part.
 
@@ -474,8 +477,13 @@ class RangeStringPart():
         rv.append(end_hand.handstring)
         return rv
 
-    def pick_combos(self):
-        return [combo for hand in self.hands for combo in hand.pick_combos()]
+    def pick_combos(self, as_str=False):
+        if not as_str:
+            return [combo for hand in self.hands
+                    for combo in hand.pick_combos()]
+        combos_list = [str(combo) for hand in self.hands
+                       for combo in hand.pick_combos()]
+        return ','.join(combos_list)
 
     def remove_freq_tag(self):
         """Removes the frequency tag from a range part string. Rerturns a

@@ -2,7 +2,7 @@ from typing import Union
 import pandas as pd
 import pytest
 
-from pynlh import Range, RangeError, HandError, RangeStringPart
+from pynlh import Range, RangeError, HandError, RangePart
 
 
 def test_mixed_suit():
@@ -271,9 +271,9 @@ def test_split_range_str_in_parts():
 
 
 def test_part_combos_count():
-    range_part_hand = RangeStringPart('[20]AA[/20]')
-    range_part_dash = RangeStringPart('[79]AKo-AJo[/79]')
-    range_part_plus = RangeStringPart('[79]QTs+[/79]')
+    range_part_hand = RangePart('[20]AA[/20]')
+    range_part_dash = RangePart('[79]AKo-AJo[/79]')
+    range_part_plus = RangePart('[79]QTs+[/79]')
     assert(len(range_part_hand.combos) == 6)
     assert(len(range_part_dash.combos) == 36)
     assert(len(range_part_plus.combos) == 8)
@@ -289,11 +289,11 @@ def test_range_combos_count():
 
 
 def test_part_pick_combo():
-    range_part_hand = RangeStringPart('[20]AA[/20]')
+    range_part_hand = RangePart('[20]AA[/20]')
     assert(cycle_pick_combos_for(range_part_hand))
-    range_part_dash = RangeStringPart('[79]AKo-AJo[/79]')
+    range_part_dash = RangePart('[79]AKo-AJo[/79]')
     assert(cycle_pick_combos_for(range_part_dash))
-    range_part_plus = RangeStringPart('[99]KTs+[/99]')
+    range_part_plus = RangePart('[99]KTs+[/99]')
     assert(cycle_pick_combos_for(range_part_plus))
 
 
@@ -306,12 +306,12 @@ def test_range_pick_combo():
     assert(cycle_pick_combos_for(range_plus))
 
 
-def cycle_pick_combos_for(obj: Union[RangeStringPart, Range]):
+def cycle_pick_combos_for(obj: Union[RangePart, Range]):
     CYCLES = 1000
     TOL = 0.1
     combos = obj.combos
     calc_combos = 0
-    if isinstance(obj, RangeStringPart):
+    if isinstance(obj, RangePart):
         calc_combos = (obj.freq / 100) * len(combos)
     elif isinstance(obj, Range):
         for part in obj.parts:

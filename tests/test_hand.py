@@ -111,6 +111,27 @@ def test_pick_combos():
     assert(hand_nosuit.pick_combos() is not None)
 
 
+def test_ordering():
+    threes = Hand("33")
+    deuces = Hand("22")
+    deuces2 = Hand("22")
+    AKs = Hand("AKs")
+    AK = Hand("AK")
+    AKo = Hand("AKo")
+    AQs = Hand("AQs")
+    AJo = Hand("AJo")
+    ten_nine = Hand("T9")
+    assert((deuces > AKs > AK > AKo))
+    assert(deuces > AKs > AK > AKo > AQs > AJo > ten_nine)
+    assert(deuces > AKs > AK > AKo > AQs > ten_nine > AJo)
+    assert(AKo <= AK)
+    assert(AKs <= AKs)
+    assert(threes < deuces)
+    assert(deuces2 >= deuces)
+    assert(ten_nine > AJo)
+
+
+
 if __name__ == "__main__":
     test_get_all_combos_str_handstring()
     test_get_all_combos_str_hand_n_type()

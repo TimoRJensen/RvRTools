@@ -1,5 +1,4 @@
 from numpy import random
-import numpy
 
 from .rank import Rank
 from .suit import Suit
@@ -42,16 +41,13 @@ class Combo():
         self.freq = freq
 
     def __repr__(self) -> str:
-        return f"Combo(combo_str='{self.combo_str}')"
+        return f"Combo('{self.combo_str}')"
 
     def __str__(self) -> str:
         return self.combo_str
 
     def pick(self) -> bool:
-        random_float = numpy.random.uniform(0.01, 100)
         if self.freq == 100:
             return True
-        elif self.freq > random_float:
-            return True
-        else:
-            return False
+        random_float = random.uniform(0.01, 100)
+        return self.freq > random_float
