@@ -78,11 +78,8 @@ class Hand():
 
     @property
     def combos(self) -> List[Combo]:
-        if self.freq == 100:
-            return [Combo(combo_str=combo) for combo in self.all_combos_str]
-        else:
-            return [Combo(combo_str=combo, freq=self.freq)
-                    for combo in self.all_combos_str]
+        return [Combo(combo_str=combo, freq=self.freq)
+                for combo in self.all_combos_str]
 
     @property
     def index_x(self):

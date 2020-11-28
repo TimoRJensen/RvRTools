@@ -1,9 +1,8 @@
-import matplotlib.pyplot as plt
+from typing import Union
 import pandas as pd
 import pytest
-from timeit import timeit
 
-from pynlh import Range, RangeError, HandError, RangeStringPart, timer
+from pynlh import Range, RangeError, HandError, RangeStringPart
 
 
 def test_mixed_suit():
@@ -281,41 +280,59 @@ def test_part_combos_count():
 
 
 def test_range_combos_count():
-    range_part_hands = Range('[20]AA,KK,AK[/20]')
-    range_part_dash = Range('[79]AKo-AJo[/79],AA')
-    range_part_plus = Range('[79]QTs+[/79],[99]KTs+[/99]')
-    assert(len(range_part_hands.combos) == 28)
-    assert(len(range_part_dash.combos) == 42)
-    assert(len(range_part_plus.combos) == 20)
+    range_hands = Range('[20]AA,KK,AK[/20]')
+    range_dash = Range('[79]AKo-AJo[/79],AA')
+    range_plus = Range('[79]QTs+[/79],[99]KTs+[/99]')
+    assert(len(range_hands.combos) == 28)
+    assert(len(range_dash.combos) == 42)
+    assert(len(range_plus.combos) == 20)
 
 
 def test_part_pick_combo():
     range_part_hand = RangeStringPart('[20]AA[/20]')
-    assert(cycle_pick_combos_for_part(range_part_hand))
+    assert(cycle_pick_combos_for(range_part_hand))
     range_part_dash = RangeStringPart('[79]AKo-AJo[/79]')
-    assert(cycle_pick_combos_for_part(range_part_dash))
+    assert(cycle_pick_combos_for(range_part_dash))
     range_part_plus = RangeStringPart('[99]KTs+[/99]')
-    assert(cycle_pick_combos_for_part(range_part_plus))
+    assert(cycle_pick_combos_for(range_part_plus))
 
 
-def cycle_pick_combos_for_part(part_: RangeStringPart):
+def test_range_pick_combo():
+    range_hands = Range('[20]AA,KK,AK[/20]')
+    assert(cycle_pick_combos_for(range_hands))
+    range_dash = Range('AA,22,33,55,[79]AKo-AJo[/79]')
+    assert(cycle_pick_combos_for(range_dash))
+    range_plus = Range('[79]QTs+[/79],[99]KTs+[/99]')
+    assert(cycle_pick_combos_for(range_plus))
+
+
+def cycle_pick_combos_for(obj: Union[RangeStringPart, Range]):
     CYCLES = 1000
     TOL = 0.1
-    combos = part_.combos
-    bottom = (part_.freq / 100) * len(combos) - TOL
-    top = (part_.freq / 100) * len(combos) + TOL
+    combos = obj.combos
+    calc_combos = 0
+    if isinstance(obj, RangeStringPart):
+        calc_combos = (obj.freq / 100) * len(combos)
+    elif isinstance(obj, Range):
+        for part in obj.parts:
+            calc_combos += len(part.combos) * (part.freq / 100)
+    else:
+        raise ValueError
+    bottom = calc_combos * (1 - TOL)
+    top = calc_combos * (1 + TOL)
     picks = []
     for _ in range(CYCLES):
-        x = len(part_.pick_combos())
+        x = len(obj.pick_combos())
         picks.append(x)
     count_picks = pd.DataFrame(picks, columns=['picks'])
     mean = count_picks.picks.mean()
-    return top > mean > bottom
+    rv = (top > mean > bottom)
+    return (top > mean > bottom)
 
 
-def test_randomizer():
+def test_randomizer_skl_mal():
     """
-    Tests the Suits Randomizer
+    Tests the Suits Randomizer using the Skalnsky Matmuth grouping
     """
     range_50 = Range('[50]AA[/50]')
     range_15 = Range('[15]AA[/15]')

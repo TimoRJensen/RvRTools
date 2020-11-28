@@ -42,7 +42,7 @@ class Combo():
         self.freq = freq
 
     def __repr__(self) -> str:
-        return f"Combo(combo_strt='{self.combo_str}')"
+        return f"Combo(combo_str='{self.combo_str}')"
 
     def __str__(self) -> str:
         return self.combo_str
