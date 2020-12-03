@@ -10,6 +10,7 @@ from rvr_tools import app
 from pynlh import Range
 from .game_scraper import GameScraper
 
+
 @app.route('/favicon.ico')
 def favicon():
     return send_from_directory(path.join(app.root_path, 'static'),
@@ -58,9 +59,9 @@ def calculator():
         return render_template('calculator.html',
                                titel='Randomize',
                                form=form,
-                            #    mdf=round(mdf.mdf_pct, 1),
+                               # mdf=round(mdf.mdf_pct, 1),
                                get_form=get_form,
-                            #    alpha=round(mdf.alpha_pct, 1),
+                               # alpha=round(mdf.alpha_pct, 1),
                                )
 
     if form.validate_on_submit():

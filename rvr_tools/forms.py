@@ -34,5 +34,5 @@ class CalcMdfForm(FlaskForm):
 
 class GetGameForm(FlaskForm):
     game_id = TextField('Game ID', validators=[DataRequired(),
-                                                Length(min=4, max=5)])
+                                               Length(min=4, max=5)])
     submit = SubmitField('Get Game')

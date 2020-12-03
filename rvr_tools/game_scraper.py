@@ -23,8 +23,14 @@ class GameScraper():
 
     @property
     def _villain_ids(self) -> List[str]:
-        vil = self.soup.find(text=re.compile('acted'))
-        return vil.parent.parent.parent.get('id')[-1:]
+        try:
+            vils = self._soup.find_all(text=re.compile('acted'))
+            rv = [vil.parent.parent.parent.get('id')[-1:] for vil in vils]
+            vils = self._soup.find_all(text=re.compile('still to act'))
+            rv = [vil.parent.parent.parent.get('id')[-1:] for vil in vils]
+            return rv
+        except AttributeError:
+            return None
 
     @property
     def pot(self) -> int:
