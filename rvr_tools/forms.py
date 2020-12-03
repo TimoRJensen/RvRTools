@@ -1,6 +1,6 @@
 from flask_wtf import FlaskForm
-from wtforms import SubmitField, IntegerField, TextAreaField
-from wtforms.validators import DataRequired, NumberRange
+from wtforms import SubmitField, IntegerField, TextAreaField, TextField
+from wtforms.validators import DataRequired, Length, NumberRange
 
 
 class RandomizeForm(FlaskForm):
@@ -30,3 +30,9 @@ class CalcMdfForm(FlaskForm):
                             default=0
                             )
     submit = SubmitField('Calculate')
+
+
+class GetGameForm(FlaskForm):
+    game_id = TextField('Game ID', validators=[DataRequired(),
+                                                Length(min=4, max=5)])
+    submit = SubmitField('Get Game')
