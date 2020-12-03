@@ -30,7 +30,6 @@ class HandError(Exception):
 @total_ordering
 class Hand():
 
-    # TODO a Hand ordering à la 22 > AKs > AK > AKo > AQs
     def __init__(self,
                  handstring: str = None,
                  hand: str = None,
