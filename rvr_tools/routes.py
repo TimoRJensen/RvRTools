@@ -54,7 +54,7 @@ def calculator():
         form.pot.data = scraper.pot
         form.invest.data = scraper.hero_invest
         form.v_invest.data = scraper.villain_invest
-        # form.bet.data =   TODO current Bet and change invest to (invest-bet)
+        # form.bet.data =  # TODO current Bet and change invest to (invest-bet)
         # for player that acted
         return render_template('calculator.html',
                                titel='Randomize',
