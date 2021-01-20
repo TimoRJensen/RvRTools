@@ -8,7 +8,7 @@ from rvr_tools.forms import CalcMdfForm, GetGameForm, RandomizeForm
 from rvr_tools.calculator import MDF
 from rvr_tools import app
 from pynlh import Range
-from .game_scraper import GameScraper
+from .game_scraper import Game
 
 
 @app.route('/favicon.ico')
@@ -50,11 +50,12 @@ def calculator():
     get_form = GetGameForm()
     if get_form.validate_on_submit():
         game_id = get_form.game_id.data
-        scraper = GameScraper(game_id)
+        scraper = Game(game_id)
         form.pot.data = scraper.pot
-        form.invest.data = scraper.hero_invest
-        form.v_invest.data = scraper.villain_invest
-        # form.bet.data =   TODO current Bet and change invest to (invest-bet)
+        form.invest.data = scraper.hero.invest
+        form.v_invest.data = scraper.acted_last.invest - scraper.last_bet
+        form.bet.data = scraper.last_bet
+        get_form.game_id.data = game_id
         # for player that acted
         return render_template('calculator.html',
                                titel='Randomize',

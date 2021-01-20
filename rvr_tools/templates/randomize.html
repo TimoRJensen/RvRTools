@@ -3,7 +3,7 @@
 <div class="col-md-12">
     <form action="" method="post">
         {{ form.hidden_tag() }}
-        <div class="card mb-2">
+        <div class="card mb-2 bg-light">
             <h4 class="card-header">Suits Randomizer</h4>
             <div class="card-body">
                 {{ form.range_str.label(class="form-control-label") }}
@@ -17,17 +17,16 @@
                 {% else %}
                 {{ form.range_str(class="form-control form-control-lg mb-2") }}
                 {% endif %}
-                {{ form.submit(class="btn btn-outline-info mb-2") }}
+                {{ form.submit(class="btn btn-outline-dark btn-sm mb-2") }}
             </div>
             <div class="card-footer">
-                <div class="mb-2"><strong>Output: </strong>
+                <div class="mb-2">
+                    <strong>Output:</strong>
                     <br>
-                    <div id="output" class="border rounded-3 pl-2">
-                        {{ r }}
-                    </div>
+                    <div id="output" class="border rounded-3 pl-2">{{ r }}</div>
                 </div>
                 <button onclick="copyElementText('output')" type="button"
-                    class="btn btn-outline-info btn-sm">Copy</button>
+                    class="btn btn-outline-dark btn-sm">Copy</button>
             </div>
         </div>
 </div>
@@ -36,13 +35,13 @@
 <script>
     function copyElementText(id) {
         var text = document.getElementById(id).innerText;
-        var elem = document.createElement("textarea");
-        document.body.appendChild(elem);
-        elem.value = text;
-        elem.select();
+        var dummy = document.createElement("textarea");
+        document.body.appendChild(dummy);
+        dummy.value = text;
+        dummy.select();
         document.execCommand("copy");
-        alert("Copied the text: " + elem.value);
-        document.body.removeChild(elem);
+        alert("Copied the text: " + dummy.value);
+        document.body.removeChild(dummy);
     }
 </script>
 

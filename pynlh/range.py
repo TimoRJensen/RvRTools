@@ -487,7 +487,7 @@ class RangePart():
 
     def remove_freq_tag(self):
         """Removes the frequency tag from a range part string. Rerturns a
-         String.
+        String.
         """
         if '[' not in self.part:
             return self.part
