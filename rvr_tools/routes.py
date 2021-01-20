@@ -55,6 +55,7 @@ def calculator():
         form.invest.data = scraper.hero.invest
         form.v_invest.data = scraper.acted_last.invest - scraper.last_bet
         form.bet.data = scraper.last_bet
+        get_form.game_id.data = game_id
         # for player that acted
         return render_template('calculator.html',
                                titel='Randomize',

@@ -1,6 +1,7 @@
 from typing import List
 
 import requests
+import re
 from bs4 import BeautifulSoup
 
 
@@ -108,6 +109,7 @@ class Game():
         self.hero: Player = None
         self.players: List[Player] = self._get_players()
         self.history = History(self)
+        # TODO Preflop is a problem - Does find "Player and not the Potsize"
         self.pot: int = int(self.state.find('strong').text)
 
     def _get_players(self):

@@ -1,108 +1,109 @@
 {% extends "layout.html" %}
 {% block content %}
+<form action="" method="post" class="mb-2">
+    {{ form.hidden_tag() }}
+    <div class="card mb- bg-light">
+        <h4 class="card-header">Get from Game</h4>
+        <div class="card-body">
+            {{ get_form.game_id.label(class="form-control-label") }}
+            {% if get_form.game_id.errors %}
+            {{ get_form.game_id(class="form-control form-control-sm is-invalid mb-2") }}
+            <div class="invalid-feedback">
+                {% for error in get_form.game_id.errors %}#
+                <span>{{ error }}</span>
+                {% endfor %}
+            </div>
+            {% else %}
+            {{ get_form.game_id(class="form-control form-control-sm mb-2") }}
+            {% endif %}
+
+            {{ get_form.submit(class="btn btn-outline-dark btn-sm") }}
+        </div>
+    </div>
+</form>
 <div class="col-md-6">
     <form action="" method="post" class="mb-2">
         {{ form.hidden_tag() }}
-        <div class="card mb-2">
-            <h4 class="card-header">Get from Game</h4>
-            <div class="card-body">
-                {{ get_form.game_id.label(class="form-control-label m-2") }}
-                {% if form.pot.errors %}
-                {{ get_form.game_id(class="form-control form-control-lg is-invalid mb-2") }}
-                <div class="invalid-feedback">
-                    {% for error in get_form.game_id.errors %}#
-                    <span>{{ error }}</span>
-                    {% endfor %}
-                </div>
-                {% else %}
-                {{ get_form.game_id(class="form-control form-control-lg mb-2") }}
-                {% endif %}
-            
-                {{ get_form.submit(class="btn btn-outline-info mt-2") }}
-            </div>
-        </div>
-    </form>
-    <form action="" method="post" class="mb-2">
-        {{ form.hidden_tag() }}
-        <div class="card mb-2">
+        <div class="card mb-2 bg-light">
             <h4 class="card-header">MDF Calculator</h4>
             <div class="card-body">
-                {{ form.pot.label(class="form-control-label m-2") }}
+                {{ form.pot.label(class="form-control-label") }}
                 {% if form.pot.errors %}
-                {{ form.pot(class="form-control form-control-lg is-invalid mb-2") }}
+                {{ form.pot(class="form-control form-control-sm is-invalid mb-2") }}
                 <div class="invalid-feedback">
                     {% for error in form.pot.errors %}#
                     <span>{{ error }}</span>
                     {% endfor %}
                 </div>
                 {% else %}
-                {{ form.pot(class="form-control form-control-lg mb-2") }}
+                {{ form.pot(class="form-control form-control-sm mb-2") }}
                 {% endif %}
 
                 {{ form.bet.label(class="form-control-label") }}
                 {% if form.bet.errors %}
-                {{ form.bet(class="form-control form-control-lg is-invalid" ) }}
+                {{ form.bet(class="form-control form-control-sm is-invalid" ) }}
                 <div class="invalid-feedback">
                     {% for error in form.bet.errors %}#
                     <span>{{ error }}</span>
                     {% endfor %}
                 </div>
                 {% else %}
-                {{ form.bet(class="form-control form-control-lg") }}
+                {{ form.bet(class="form-control form-control-sm mb-2") }}
                 {% endif %}
 
                 {{ form.invest.label(class="form-control-label") }}
                 {% if form.invest.errors %}
-                {{ form.invest(class="form-control form-control-lg is-invalid" ) }}
+                {{ form.invest(class="form-control form-control-sm is-invalid" ) }}
                 <div class="invalid-feedback">
                     {% for error in form.invest.errors %}#
                     <span>{{ error }}</span>
                     {% endfor %}
                 </div>
                 {% else %}
-                {{ form.invest(class="form-control form-control-lg") }}
+                {{ form.invest(class="form-control form-control-sm mb-2") }}
                 {% endif %}
 
                 {{ form.v_invest.label(class="form-control-label") }}
                 {% if form.v_invest.errors %}
-                {{ form.v_invest(class="form-control form-control-lg is-invalid" ) }}
+                {{ form.v_invest(class="form-control form-control-sm is-invalid" ) }}
                 <div class="invalid-feedback">
                     {% for error in form.v_invest.errors %}#
                     <span>{{ error }}</span>
                     {% endfor %}
                 </div>
                 {% else %}
-                {{ form.v_invest(class="form-control form-control-lg mb-2") }}
+                {{ form.v_invest(class="form-control form-control-sm mb-2") }}
                 {% endif %}
-                {{ form.submit(class="btn btn-outline-info mt-2") }}
+                {{ form.submit(class="btn btn-outline-dark btn-sm") }}
+            </div>
+            <div class= "card-footer">
+                <h5>MDF: {{ mdf }}  <br><br>  Alpha: {{ alpha }}</h5>
             </div>
         </div>
     </form>
-    <div class="row">
+    <!-- <div class="row">
         <div class="col">
-            <div class="card bg-light">
-                <!-- <img class="card-img-top" src="..." alt="Card image cap"> -->
+            <div class="card bg-light mb-2">
                 <h5 class="card-header">MDF:</h5>
                 <div class="card-body">
                     <p class="card-text" id="output" style="font-size: 2rem;">{{ mdf }}%</p>
-                    <!-- <button onclick="copyElementText('output')" class="btn btn-outline-info">Copy MDF</button> -->
                 </div>
             </div>
         </div>
         <div class="col">
-            <div class="card bg-light">
+            <div class="card bg-light mb-2">
                 <h5 class="card-header">Alpha:</h5>
                 <div class="card-body">
                     <p class="card-text" id="output-alpha" style="font-size: 2rem;">{{ alpha }}%</p>
                 </div>
             </div>
         </div>
-    </div>
+    </div> -->
 </div>
 <div class="col-md-6">
     <div class="card bg-light">
         <h5 class="card-header">Lorem:</h5>
-        <div class="card-body">
+        <div class="card-body mb-2">
             Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam, explicabo? Explicabo saepe atque
             aspernatur? Eligendi est voluptatibus repellat vitae nulla corporis, sint quis quo officiis. Mollitia
             qui exercitationem vitae atque.
