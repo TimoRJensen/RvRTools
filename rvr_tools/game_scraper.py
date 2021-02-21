@@ -11,9 +11,11 @@ class Player():
         self.game = game
         self.id = id
         self.state = game.state.find(id='player-table-' + self.id)
+        self.situation = game.situation.find(id='position-table-' + self.id)
         self.name = self.state.find('strong').text
         self.stack = int(self.state.find_all('td')[1].text)
         self.invest = int(self.state.find_all('td')[2].text)
+        self.init_invest = int(self.situation.find_all('td')[2].text)
         self.status = self.state.find_all('td')[3].text[2:-2]
         self.acting = self.status == 'acting now'
 
@@ -106,6 +108,7 @@ class Game():
                                   + self.id)
         self.soup = BeautifulSoup(self._html.content, 'html.parser')
         self.state = self.soup.find(id='game-state')
+        self.situation = self.soup.find(id='situation')
         self.hero: Player = None
         self.players: List[Player] = self._get_players()
         self.history = History(self)
@@ -129,7 +132,12 @@ class Game():
             pot_soup = self.state.find(text=re.compile(pot_txt)).nextSibling
             return int(pot_soup.text)
         except AttributeError:
-            return 0
+            try:
+                pot_soup = self.situation.find_all('strong')[1]
+                pot_soup = pot_soup.nextSibling
+                return int(pot_soup)
+            except AttributeError:
+                return 0
 
     def __str__(self) -> str:
         return f"Game: {self.id}"

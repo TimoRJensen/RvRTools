@@ -50,13 +50,23 @@ def calculator():
     get_form = GetGameForm()
     if get_form.validate_on_submit():
         game_id = get_form.game_id.data
-        scraper = Game(game_id)
-        form.pot.data = scraper.pot
-        form.invest.data = scraper.hero.invest
-        form.v_invest.data = scraper.acted_last.invest - scraper.last_bet
-        form.bet.data = scraper.last_bet
-        get_form.game_id.data = game_id
+        try:
+            scraper = Game(game_id)
+            form.pot.data = scraper.pot
+            form.invest.data = scraper.hero.invest
+            if scraper.history.last_street == 'Pre':
+                form.bet.data = (scraper.last_bet
+                                 - scraper.acted_last.init_invest)
+                form.v_invest.data = scraper.acted_last.init_invest
+            else:
+                form.bet.data = scraper.last_bet
+                form.v_invest.data = (scraper.acted_last.invest
+                                      - scraper.last_bet)
+        except IndexError:
+            get_form.game_id.errors = ("""Sorry can't handle this game state
+                                          yet.""",)
         # for player that acted
+        get_form.game_id.data = game_id
         return render_template('calculator.html',
                                titel='Randomize',
                                form=form,
