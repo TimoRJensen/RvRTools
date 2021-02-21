@@ -76,6 +76,7 @@ def calculator():
                                )
 
     if form.validate_on_submit():
+        game_id = get_form.game_id.data
         pot = form.pot.data
         bet = form.bet.data
         invest = form.invest.data
