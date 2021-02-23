@@ -46,6 +46,7 @@
         <h5 class="card-header">Game Details:</h5>
         <div class="card-body">
             <p class="mb-0">
+                {% if scraper %}
                 Game ID:<strong> {{ scraper.id }} </strong><br>
                 Situation:<strong> {{ scraper.sit_name }} </strong><br>
                 Player 1:<strong> {{ scraper.players[0] }} </strong><br>
@@ -54,6 +55,7 @@
                 Current Bet:<strong> {{ scraper.last_bet }}</strong> <br>
                 Player to act: <strong>{{ scraper.hero }}</strong> <br>
                 Currently to call: <strong>{{ scraper.to_call }}</strong>
+                {% endif %}
             </p>
         </div>
     </div>

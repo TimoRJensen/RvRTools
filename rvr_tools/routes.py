@@ -100,11 +100,17 @@ def calculator():
                                threeq=threeq,
                                psb=psb,
                                scraper=scraper,
-                               hero=str(scraper.hero)
                                )
     return render_template('calculator.html',
                            titel='Randomize',
                            mdf_form=mdf_form,
                            get_form=get_form,
                            size_form=size_form,
+                           scraper=None,
+                           mdf=0,
+                           alpha=0,
+                           third=0,
+                           half=0,
+                           threeq=0,
+                           psb=0,
                            )
