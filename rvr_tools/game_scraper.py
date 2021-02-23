@@ -23,13 +23,13 @@ class Player():
         return f"{self.__class__.__name__}(game={self.game}, id={self.id})"
 
     def __str__(self) -> str:
-        return self.id
+        return self.name
 
 
 class History():
     def __init__(self, game) -> None:
         self.game = game
-        self.last_street = 'Pre'
+        self.last_street = 'Preflop'
         self.soup = self.game.soup.find(id='history')
         self.events: List[Event] = self._get_events()
 
@@ -109,10 +109,13 @@ class Game():
         self.soup = BeautifulSoup(self._html.content, 'html.parser')
         self.state = self.soup.find(id='game-state')
         self.situation = self.soup.find(id='situation')
-        self.hero: Player = None
+        self.sit_name = self.situation.find_all('strong')[0].nextSibling[:-2]
+        self.hero: Player = None  # set via self._get_players()
         self.players: List[Player] = self._get_players()
         self.history = History(self)
         self.pot = self._get_pot()
+        self.total_pot = self._get_total_pot()
+        self.to_call = self.last_bet - self.hero.invest
 
     def _get_players(self):
         players = []
@@ -139,6 +142,12 @@ class Game():
             except AttributeError:
                 return 0
 
+    def _get_total_pot(self) -> int:
+        if self.history.last_street == "Preflop":
+            return self.last_bet + self.hero.invest + self.pot
+        else:
+            return self.pot + self.last_bet
+
     def __str__(self) -> str:
         return f"Game: {self.id}"
 
@@ -156,7 +165,11 @@ class Game():
 
     @property
     def last_bet(self) -> int:
-        return self.history.events[-1].amount
+        if self.history.last_street == self.history.events[-1].street:
+            return self.history.events[-1].amount
+        else:
+            return 0
+
 
 
 class DecisionEvent(Event):
