@@ -1,126 +1,61 @@
 {% extends "layout.html" %}
 {% block content %}
-<form action="" method="post" class="mb-2">
-    {{ form.hidden_tag() }}
-    <div class="card mb- bg-light">
-        <h4 class="card-header">Get from Game</h4>
-        <div class="card-body">
-            {{ get_form.game_id.label(class="form-control-label") }}
-            {% if get_form.game_id.errors %}
-            {{ get_form.game_id(class="form-control form-control-sm is-invalid mb-2") }}
-            <div class="invalid-feedback">
-                {% for error in get_form.game_id.errors %}#
-                <span>{{ error }}</span>
-                {% endfor %}
-            </div>
-            {% else %}
-            {{ get_form.game_id(class="form-control form-control-sm mb-2") }}
-            {% endif %}
-
-            {{ get_form.submit(class="btn btn-outline-dark btn-sm") }}
-        </div>
-    </div>
-</form>
-<div class="col-md-6">
-    <form action="" method="post" class="mb-2">
-        {{ form.hidden_tag() }}
-        <div class="card mb-2 bg-light">
-            <h4 class="card-header">MDF Calculator</h4>
+<div class="card-group">
+    <div class="card bg-light m-2 border">
+        <form action="" method="post">
+            {{ mdf_form.hidden_tag() }}
+            <h5 class="card-header">Get from Game</h5>
             <div class="card-body">
-                {{ form.pot.label(class="form-control-label") }}
-                {% if form.pot.errors %}
-                {{ form.pot(class="form-control form-control-sm is-invalid mb-2") }}
-                <div class="invalid-feedback">
-                    {% for error in form.pot.errors %}#
+                {{ get_form.game_id.label(class="form-control-label") }}
+                {% if get_form.game_id.errors %}
+                {{ get_form.game_id(class="form-control form-control-sm is-invalid mb-2") }}
+                <div class="invalid-feedback mb-2">
+                    {% for error in get_form.game_id.errors %}#
                     <span>{{ error }}</span>
                     {% endfor %}
                 </div>
                 {% else %}
-                {{ form.pot(class="form-control form-control-sm mb-2") }}
+                {{ get_form.game_id(class="form-control form-control-sm mb-2") }}
                 {% endif %}
 
-                {{ form.bet.label(class="form-control-label") }}
-                {% if form.bet.errors %}
-                {{ form.bet(class="form-control form-control-sm is-invalid" ) }}
-                <div class="invalid-feedback">
-                    {% for error in form.bet.errors %}#
-                    <span>{{ error }}</span>
-                    {% endfor %}
-                </div>
-                {% else %}
-                {{ form.bet(class="form-control form-control-sm mb-2") }}
-                {% endif %}
-
-                {{ form.invest.label(class="form-control-label") }}
-                {% if form.invest.errors %}
-                {{ form.invest(class="form-control form-control-sm is-invalid" ) }}
-                <div class="invalid-feedback">
-                    {% for error in form.invest.errors %}#
-                    <span>{{ error }}</span>
-                    {% endfor %}
-                </div>
-                {% else %}
-                {{ form.invest(class="form-control form-control-sm mb-2") }}
-                {% endif %}
-
-                {{ form.v_invest.label(class="form-control-label") }}
-                {% if form.v_invest.errors %}
-                {{ form.v_invest(class="form-control form-control-sm is-invalid" ) }}
-                <div class="invalid-feedback">
-                    {% for error in form.v_invest.errors %}#
-                    <span>{{ error }}</span>
-                    {% endfor %}
-                </div>
-                {% else %}
-                {{ form.v_invest(class="form-control form-control-sm mb-2") }}
-                {% endif %}
-                {{ form.submit(class="btn btn-outline-dark btn-sm") }}
+                {{ get_form.submit(class="btn btn-outline-dark btn-sm") }}
             </div>
-            <div class= "card-footer">
-                <h5>MDF: {{ mdf }}  <br><br>  Alpha: {{ alpha }}</h5>
-            </div>
+        </form>
+    </div>
+    <div class="card bg-light m-2 border">
+        <h5 class="card-header">Bet/Raise sizes:</h5>
+        <div class="card-body ">
+            <p class="mb-0">
+                1/3 Pot: <strong>{{ third }}</strong> <br>
+                1/2 Pot: <strong>{{ half }}</strong> <br>
+                3/4 Pot: <strong>{{ threeq }}</strong> <br>
+                1/1 Pot: <strong>{{ psb }}</strong>
+            </p>
         </div>
-    </form>
-    <!-- <div class="row">
-        <div class="col">
-            <div class="card bg-light mb-2">
-                <h5 class="card-header">MDF:</h5>
-                <div class="card-body">
-                    <p class="card-text" id="output" style="font-size: 2rem;">{{ mdf }}%</p>
-                </div>
-            </div>
+    </div>
+    <div class="card  bg-light m-2 border">
+        <h5 class="card-header">Min. Defense Frequency</h5>
+        <div class="card-body">
+            <p class="mb-0">
+                Min. Defense Frequency: <strong>{{ mdf }}</strong> <br>
+                Alpha: <strong>{{ alpha }}</strong>
+            </p>
         </div>
-        <div class="col">
-            <div class="card bg-light mb-2">
-                <h5 class="card-header">Alpha:</h5>
-                <div class="card-body">
-                    <p class="card-text" id="output-alpha" style="font-size: 2rem;">{{ alpha }}%</p>
-                </div>
-            </div>
-        </div>
-    </div> -->
-</div>
-<div class="col-md-6">
-    <div class="card bg-light">
-        <h5 class="card-header">Lorem:</h5>
-        <div class="card-body mb-2">
-            Lorem ipsum dolor sit amet consectetur adipisicing elit. Aperiam, explicabo? Explicabo saepe atque
-            aspernatur? Eligendi est voluptatibus repellat vitae nulla corporis, sint quis quo officiis. Mollitia
-            qui exercitationem vitae atque.
+    </div>
+    <div class="card bg-light m-2 border">
+        <h5 class="card-header">Game Details:</h5>
+        <div class="card-body">
+            <p class="mb-0">
+                Game ID:<strong> {{ scraper.id }} </strong><br>
+                Situation:<strong> {{ scraper.sit_name }} </strong><br>
+                Player 1:<strong> {{ scraper.players[0] }} </strong><br>
+                Player 2:<strong> {{ scraper.players[1] }} </strong><br>
+                Current Street:<strong> {{ scraper.history.last_street }} </strong><br>
+                Current Bet:<strong> {{ scraper.last_bet }}</strong> <br>
+                Player to act: <strong>{{ scraper.hero }}</strong> <br>
+                Currently to call: <strong>{{ scraper.to_call }}</strong>
+            </p>
         </div>
     </div>
 </div>
-
-<!-- <script>
-    function copyElementText(id) {
-        var text = document.getElementById(id).innerText;
-        var elem = document.createElement("textarea");
-        document.body.appendChild(elem);
-        elem.value = text;
-        elem.select();
-        document.execCommand("copy");
-        alert("Copied the text: " + elem.value);
-        document.body.removeChild(elem);
-    }
-</script> -->
 {% endblock content %}
