@@ -39,7 +39,7 @@ class History():
             text = Event.purify(event)
             if text in ['Flop:', 'Turn:', 'River:']:
                 self.last_street = text[:-1]
-            player = self.game.get_player_by_name(text.split()[0])
+            player: Player = self.game.get_player_by_name(text.split()[0])
             if player is None:
                 continue
             e = Event(game=self.game,
