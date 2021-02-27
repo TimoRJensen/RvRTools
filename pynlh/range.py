@@ -6,6 +6,8 @@ Author: GTOHOLE 11-20
 from typing import List
 from pandas import DataFrame
 from random import sample
+from copy import deepcopy
+
 from .hand import Hand
 from .rank import RANKS
 
@@ -19,7 +21,7 @@ class Range():
 
         - range_str (String): The range definition like:
         'AA,QQ-TT,AKs,QJo-Q9o,[56.0]KQs-KTs[/56.0]'
-        - game_uid (String): The uid refering to the game this range belongs
+        - game_uid (String): The uid referring to the game this range belongs
           to.
 
         Currently supported Rangestring formats include:
@@ -37,12 +39,38 @@ class Range():
         '''
         self.range_str = range_str.replace(";", ",")
         self.parts: List[RangePart] = []
-        self.hands_dict = self.build_0freq_hands_dict()
-        self.converted_range_dict = self.convert_range_str_to_dict()
+        self.hands_dict: dict = self.build_0freq_hands_dict()
+        self.converted_range_dict: dict = self.convert_range_str_to_dict()
         self._validate_input()
 
+    def __delitem__(self, hand):
+        del self.converted_range_dict[hand]
+
+    def __setitem__(self, hand, freq):
+        self.converted_range_dict[hand] = freq
+
+    def __getitem__(self, hand):
+        return self.converted_range_dict[hand]
+
+    def __iter__(self):
+        return iter(self.converted_range_dict.items())
+
+    def __contains__(self, key) -> bool:
+        return key in self.converted_range_dict
+
+    def __sub__(self, other: 'Range') -> 'Range':
+        diff = deepcopy(self)
+        for hand, freq in other:
+            if hand in self:
+                s_freq = self[hand]
+                if freq < s_freq:
+                    diff[hand] = s_freq - freq
+                else:
+                    del diff[hand]
+        return diff
+
     @property
-    def combos(self):
+    def combos(self) -> list:
         """
         Collects all Combo objects from RangePart objects and
         consolidates them in one list, that is returned
@@ -65,9 +93,9 @@ class Range():
                 raise RangeError(self.range_str, msg=err_msg)
 
     @staticmethod
-    def _flatten_l_of_ls(x):
+    def _flatten_l_of_ls(x) -> list:
         """
-        Helperfunction thats flattens lists of lists.
+        Helperfunction that's flattens lists of lists.
         """
         rv = []
         for sub in x:
@@ -76,7 +104,7 @@ class Range():
         return rv
 
     @staticmethod
-    def build_0freq_hands_dict():
+    def build_0freq_hands_dict() -> dict:
         """
         Creates a dictionary with all No-Limit Holdem hands.
         (like {'AA': [0, 1, 1], 'AKo': [0, 1, 2] ...} ) Hands are the keys and
@@ -100,7 +128,7 @@ class Range():
                 hands_dict[hand] = [0, n + 1, n2 + 1]
         return hands_dict
 
-    def build_df_freqs_and_combos_skl_mal(self):
+    def build_df_freqs_and_combos_skl_mal(self) -> DataFrame:
         """
         Takes Range object and creates a DataFrame grouped by
         Sklansky-Malmuth-Groups and frequencies.
@@ -117,9 +145,9 @@ class Range():
         df = df.groupby(['group', 'freq']).agg(list)
         return df
 
-    def convert_range_str_to_dict(self):
+    def convert_range_str_to_dict(self) -> dict:
         """
-        Converts rangestrings into single hands dictionary with frequences.
+        Converts rangestrings into single hands dictionary with frequencies.
 
         Input: 'AA,QQ-TT,AKs,QJo-Q9o,[56.0]KQs-KTs[/56.0]'
 
@@ -132,7 +160,7 @@ class Range():
         str_split = self.split_range_str_in_parts(str_no_space)
         for part_str in str_split:
             self.parts.append(RangePart(part=part_str,
-                                              my_range_obj=self))
+                                        my_range_obj=self))
         for part in self.parts:
             for h in part.hands_str:
                 rv[h] = part.freq
@@ -153,7 +181,7 @@ class Range():
                                   debug=False):
         """
         Takes a Range object and creates rangestring with frequencies
-        approximatly applied using suits.
+        approximately applied using suits.
 
         Grouping options are:
 
@@ -284,7 +312,7 @@ class RangePart():
 
         - part (String): The actual range string part like 'AA' or 'QQ-TT'
             or '[56.0]KQs-KTs[/56.0]'
-        - game_uid (String): The uid refering to the game this range belongs
+        - game_uid (String): The uid referring to the game this range belongs
          to.
         - my_range_obj (Range): The instance of the range this part
             belongs to.
