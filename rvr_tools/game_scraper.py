@@ -171,7 +171,6 @@ class Game():
             return 0
 
 
-
 class DecisionEvent(Event):
     pass
 
