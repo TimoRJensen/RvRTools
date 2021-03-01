@@ -1,3 +1,5 @@
+#TODO MDF is wrong for postflop 3+bets - risk not reduced by initial bets and
+#  initial bet not added to reward.
 class MDF(object):
     """
     MDF Calculator Object
