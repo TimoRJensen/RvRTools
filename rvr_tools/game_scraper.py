@@ -28,10 +28,16 @@ class Player():
 
 class History():
     def __init__(self, game) -> None:
-        self.game = game
+        self.game: Game = game
         self.last_street = 'Preflop'
         self.soup = self.game.soup.find(id='history')
         self.events: List[Event] = self._get_events()
+
+    def _set_v_invest(self, events):
+        last_name = events[-1].player.name
+        last_amount = events[-1].amount
+        vil_amts = [event.amount for event in events if event.player.name == last_name and event.street == self.last_street]
+        events[-1].player.invest = sum(vil_amts) - last_amount
 
     def _get_events(self):
         events = []
@@ -48,6 +54,7 @@ class History():
                       street=self.last_street,
                       )
             events.append(e)
+        self._set_v_invest(events)
         return events
 
 
