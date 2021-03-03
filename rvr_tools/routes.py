@@ -36,7 +36,7 @@ def randomize():
         range_str = range_.pick_combos(as_str=True)
         # flash('successfully randomized', 'success')
         return render_template('randomize.html',
-                               titel='Randomize',
+                               titel='Randomizer',
                                form=form,
                                r=range_str)
     return render_template('randomize.html', titel='Randomize', form=form)
@@ -84,7 +84,7 @@ def calculator():
         threeq = round((((total_pot + to_call) * .75) + to_call), 1)
         psb = round((total_pot + to_call + to_call), 1)
         return render_template('calculator.html',
-                               titel='Randomize',
+                               titel='Calculator',
                                mdf_form=mdf_form,
                                mdf=round(mdf.mdf_pct, 1),
                                get_form=get_form,
@@ -97,7 +97,7 @@ def calculator():
                                scraper=scraper,
                                )
     return render_template('calculator.html',
-                           titel='Randomize',
+                           titel='Calculator',
                            mdf_form=mdf_form,
                            get_form=get_form,
                            size_form=size_form,
