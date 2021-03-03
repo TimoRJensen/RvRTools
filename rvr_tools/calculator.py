@@ -1,4 +1,4 @@
-#TODO MDF is wrong for postflop 3+bets - risk not reduced by initial bets and
+# TODO MDF is wrong for postflop 3+bets - risk not reduced by initial bets and
 #  initial bet not added to reward.
 class MDF(object):
     """
@@ -37,10 +37,10 @@ class MDF(object):
 
     @property
     def alpha(self) -> float:
-        return (self.bet / (self.bet
-                            + self.pot
-                            + self.invest
-                            + self.villain_invest))
+        return ((self.bet - self.villain_invest) / (self.bet
+                                                    + self.pot
+                                                    + self.invest
+                                                    ))
 
     @property
     def alpha_pct(self) -> float:
