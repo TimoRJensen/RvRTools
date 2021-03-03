@@ -62,7 +62,7 @@ def calculator():
             else:
                 bet = scraper.last_bet
                 mdf_form.bet.data = bet
-                v_invest = (scraper.acted_last.invest - scraper.last_bet)
+                v_invest = scraper.acted_last.invest
             mdf_form.v_invest.data = v_invest
             mdf_form.formula.data = (f"MDF = 1 - ({bet} / ({pot} + {invest} + "
                                      f"{v_invest} + {bet}))")
