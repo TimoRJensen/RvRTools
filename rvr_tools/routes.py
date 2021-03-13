@@ -71,18 +71,23 @@ def calculator():
                       invest=invest,
                       villain_invest=v_invest
                       )
-        except IndexError:
+            get_form.game_id.data = game_id
+            size_form.pot.data = pot
+            size_form.bet.data = bet
+            to_call = scraper.to_call
+            total_pot = scraper.total_pot
+            third = round((((total_pot + to_call) * .33) + to_call), 1)
+            half = round((((total_pot + to_call) * .50) + to_call), 1)
+            threeq = round((((total_pot + to_call) * .75) + to_call), 1)
+            psb = round((total_pot + to_call + to_call), 1)
+        except:
             get_form.game_id.errors = ("""Sorry can't handle this game state
                                           yet.""",)
-        get_form.game_id.data = game_id
-        size_form.pot.data = pot
-        size_form.bet.data = bet
-        to_call = scraper.to_call
-        total_pot = scraper.total_pot
-        third = round((((total_pot + to_call) * .33) + to_call), 1)
-        half = round((((total_pot + to_call) * .50) + to_call), 1)
-        threeq = round((((total_pot + to_call) * .75) + to_call), 1)
-        psb = round((total_pot + to_call + to_call), 1)
+            return render_template('calculator.html',
+                                   titel='Calculator',
+                                   mdf_form=mdf_form,
+                                   get_form=get_form,
+                                   size_form=size_form,)
         return render_template('calculator.html',
                                titel='Calculator',
                                mdf_form=mdf_form,
