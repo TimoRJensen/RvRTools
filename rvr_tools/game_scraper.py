@@ -36,7 +36,8 @@ class History():
     def _set_v_invest(self, events):
         last_name = events[-1].player.name
         last_amount = events[-1].amount
-        vil_amts = [event.amount for event in events if event.player.name == last_name and event.street == self.last_street]
+        vil_amts = [event.amount for event in events if event.player.name ==
+                    last_name and event.street == self.last_street]
         events[-1].player.invest = sum(vil_amts) - last_amount
 
     def _get_events(self):

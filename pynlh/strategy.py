@@ -20,9 +20,8 @@ class Strategy():
 
     def __init__(self,
                  name: str,
-                 aggressive_range: Range,
+                 aggressive_ranges: Range,
                  passive_range: Range,
-                 fold_range: Range,
                  ) -> None:
         """
         Pynlh's Strategy class.
@@ -32,8 +31,5 @@ class Strategy():
         for folding.
         """
         self.name = name
-        self.aggressive_range = aggressive_range
+        self.aggressive_ranges = aggressive_ranges
         self.passive_range = passive_range
-        self.fold_range = fold_range
-
-

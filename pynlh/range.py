@@ -37,7 +37,7 @@ class Range():
 
         ";" will be replaced by a ","
         '''
-        self.range_str = range_str.replace(";", ",")
+        self.range_str = range_str.replace(";", ",").replace('\n', '')
         self.parts: List[RangePart] = []
         self.hands_dict: dict = self.build_0freq_hands_dict()
         self.converted_range_dict: dict = self.convert_range_str_to_dict()
@@ -68,6 +68,22 @@ class Range():
                 else:
                     del diff[hand]
         return diff
+
+    def __len__(self):
+        return len(self.converted_range_dict)
+
+    def __add__(self, other: 'Range') -> 'Range':
+        sum_ = deepcopy(self)
+        for hand, o_freq in other:
+            if hand in self:
+                s_freq = self[hand]
+                if s_freq < 100:
+                    new_freq = s_freq + o_freq
+                    sum_[hand] = min(new_freq, 100)
+            else:
+                sum_[hand] = o_freq
+
+        return sum_
 
     @property
     def combos(self) -> list:
@@ -208,18 +224,18 @@ class Range():
             return randomized_suits_string
         elif grouping == 'skl-mal':
             df = self.build_df_freqs_and_combos_skl_mal()
-            ls_cmbs_hand = []
+            ls_comobs_hand = []
             rv_list = []
             df['flat_combos'] = df['combos'].apply(self._flatten_l_of_ls, 1)
             df['no. of combos'] = df['flat_combos'].apply(len, 1)
             df['Calc no. of combos'] = 0
             for (grp, freq), (_, combos_lists, _, _, _) in df.iterrows():
-                ls_cmbs_hand = []
+                ls_comobs_hand = []
                 for combos_list in combos_lists:
-                    ls_cmbs_hand += combos_list
-                no_of_combos = round((freq/100) * len(ls_cmbs_hand))
+                    ls_comobs_hand += combos_list
+                no_of_combos = round((freq/100) * len(ls_comobs_hand))
                 df.loc[(grp, freq), 'Calc no. of combos'] = no_of_combos
-                ls_combos_grp = sample(ls_cmbs_hand, no_of_combos)
+                ls_combos_grp = sample(ls_comobs_hand, no_of_combos)
                 rv_list += ls_combos_grp
             for combo in rv_list:
                 rv += combo + combo_delimiter
@@ -281,7 +297,7 @@ class RangeError(Exception):
 
     ERR001_LEN_NOT_EQUAL = """Length of starting hand is not equal to the
                            ending hand of this Range Part. ERR001"""
-    ERR002_PAIR_LEN_NOT_2 = """The lengh of a pair Range Part must be exactly
+    ERR002_PAIR_LEN_NOT_2 = """The length of a pair Range Part must be exactly
                             2. - ERR002"""
     ERR003_NOT_VALID_CHAR = ' is not a valid character for a range - ERR003'
 
@@ -514,7 +530,7 @@ class RangePart():
         return ','.join(combos_list)
 
     def remove_freq_tag(self):
-        """Removes the frequency tag from a range part string. Rerturns a
+        """Removes the frequency tag from a range part string. Returns a
         String.
         """
         if '[' not in self.part:

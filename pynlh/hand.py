@@ -142,9 +142,11 @@ class Hand():
 
     def _set_default_values(self):
         if self.handstring is not None:
-            new_handstring = ''
-            for i, chr in enumerate(self.handstring):
-                new_handstring += chr.upper() if i < 2 else chr.lower()
+            new_handstring = ''.join(
+                chr.upper() if i < 2 else chr.lower()
+                for i, chr in enumerate(self.handstring)
+            )
+
             self.handstring = new_handstring
             self.hand_type = self.evaluate_hand_type_from_handstring()
             self.hand = self.eval_hand_from_handstring()
