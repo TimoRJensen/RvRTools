@@ -36,7 +36,8 @@ class History():
     def _set_v_invest(self, events):
         last_name = events[-1].player.name
         last_amount = events[-1].amount
-        vil_amts = [event.amount for event in events if event.player.name == last_name and event.street == self.last_street]
+        vil_amts = [event.amount for event in events if event.player.name ==
+                    last_name and event.street == self.last_street]
         events[-1].player.invest = sum(vil_amts) - last_amount
 
     def _get_events(self):
@@ -176,6 +177,19 @@ class Game():
             return self.history.events[-1].amount
         else:
             return 0
+
+    def next_bet(self, percentage: float) -> float:
+        """
+        Function to return next betsize.
+
+        Parameters
+        ----
+
+        percentage  =  Percentage of pot in decimal. So 1 = 100% pot
+                       and .5 = 50% pot
+        """
+        return round((((self.total_pot + self.to_call) * percentage)
+                      + self.to_call), 1)
 
 
 class DecisionEvent(Event):

@@ -15,22 +15,22 @@ def test_mixed_rank():
         Range('Q9s-K9o')
 
 
-def test_omited_suit_start():
+def test_omitted_suit_start():
     with pytest.raises(RangeError):
         Range('KQ-K9o')
 
 
-def test_omited_suit_end():
+def test_omitted_suit_end():
     with pytest.raises(RangeError):
         Range('KQs-K9')
 
 
-def test_omited_rank_start():
+def test_omitted_rank_start():
     with pytest.raises(HandError):
         Range('Qs-Q9s')
 
 
-def test_omited_rank_end():
+def test_omitted_rank_end():
     with pytest.raises(HandError):
         Range('Q9o-Qo')
 
@@ -326,13 +326,12 @@ def cycle_pick_combos_for(obj: Union[RangePart, Range]):
         picks.append(x)
     count_picks = pd.DataFrame(picks, columns=['picks'])
     mean = count_picks.picks.mean()
-    rv = (top > mean > bottom)
     return (top > mean > bottom)
 
 
 def test_randomizer_skl_mal():
     """
-    Tests the Suits Randomizer using the Skalnsky Matmuth grouping
+    Tests the Suits Randomizer using the Sklansky Malmuth grouping
     """
     range_50 = Range('[50]AA[/50]')
     range_15 = Range('[15]AA[/15]')
@@ -340,6 +339,46 @@ def test_randomizer_skl_mal():
     rand_combos_15 = range_15.randomize_suits_for_range(grouping='skl-mal')
     assert(len(rand_combos_50) == 14)
     assert(len(rand_combos_15) == 4)
+
+
+def test_range_subtraction():
+    range_50 = Range('[50]AA[/50],KK-JJ')
+    range_15 = Range('[15]AA[/15],JJ')
+    range_diff = range_50 - range_15
+    assert('JJ' not in range_diff)
+    assert('KK' in range_diff)
+    assert(range_diff['AA'] == 35)
+    assert(range_50['AA'] == 50)
+
+
+def test_range_addition():
+    range_50 = Range('[50]AA[/50],KK-JJ')
+    range_15 = Range('[15]AA[/15],TT')
+    range_sum = range_50 + range_15
+    assert('TT' in range_sum)
+    assert('99' not in range_sum)
+    assert(range_sum['AA'] == 65)
+    assert(range_50['AA'] == 50)
+    assert(range_15['AA'] == 15)
+
+
+def test_range_iter():
+    range_50 = Range('[50]AA[/50],KK-JJ')
+    i = sum(1 for hand, freq in range_50)
+    assert(i == 4)
+    assert(i != 5)
+
+
+def test_range_len():
+    range_50 = Range('[50]AA[/50],KK-JJ')
+    assert(len(range_50) == 4)
+    assert(len(range_50) != 3)
+
+
+def test_full_range():
+    full_range = Range.full_range()
+    assert(len(full_range) == 169)
+    assert(full_range['54s'] == 100)
 
 
 if __name__ == "__main__":
@@ -350,6 +389,7 @@ if __name__ == "__main__":
     # test_range_ranges_freq()
     # test_range_plus_ranges_freq(True)
     # test_split_range_str_in_parts()
-    test_part_pick_combo()
+    # test_part_pick_combo()
     # plt.show()
     # test_mixed_rank()
+    test_range_subtraction()
