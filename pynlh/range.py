@@ -144,6 +144,17 @@ class Range():
                 hands_dict[hand] = [0, n + 1, n2 + 1]
         return hands_dict
 
+    @staticmethod
+    def full_range() -> 'Range':
+        return Range('''22+,23o,42o+,52o+,62o+,72o+,82o+,92o+,T2o+,J2o+,Q2o+,K2o+,
+                     A2o+,23s,42s+,52s+,62s+,72s+,82s+,92s+,T2s+,J2s+,Q2s+,K2s+,
+                     A2s+''')
+
+    @classmethod
+    def build_xy_dict(cls: 'Range') -> dict:
+        return {(x, y): hand for hand, (_, x, y)
+                in cls.build_0freq_hands_dict().items()}
+
     def build_df_freqs_and_combos_skl_mal(self) -> DataFrame:
         """
         Takes Range object and creates a DataFrame grouped by

@@ -178,6 +178,19 @@ class Game():
         else:
             return 0
 
+    def next_bet(self, percentage: float) -> float:
+        """
+        Function to return next betsize.
+
+        Parameters
+        ----
+
+        percentage  =  Percentage of pot in decimal. So 1 = 100% pot
+                       and .5 = 50% pot
+        """
+        return round((((self.total_pot + self.to_call) * percentage)
+                      + self.to_call), 1)
+
 
 class DecisionEvent(Event):
     pass

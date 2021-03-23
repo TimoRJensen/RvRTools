@@ -66,20 +66,18 @@ def calculator():
             mdf_form.v_invest.data = v_invest
             mdf_form.formula.data = (f"MDF = 1 - ({bet} / ({pot} + {invest} + "
                                      f"{v_invest} + {bet}))")
-            mdf = MDF(pot=pot,
+            mdf = MDF(pot=scraper.pot,
                       bet=bet,
                       invest=invest,
-                      villain_invest=v_invest
+                      villain_invest=v_invest,
                       )
             get_form.game_id.data = game_id
             size_form.pot.data = pot
             size_form.bet.data = bet
-            to_call = scraper.to_call
-            total_pot = scraper.total_pot
-            third = round((((total_pot + to_call) * .33) + to_call), 1)
-            half = round((((total_pot + to_call) * .50) + to_call), 1)
-            threeq = round((((total_pot + to_call) * .75) + to_call), 1)
-            psb = round((total_pot + to_call + to_call), 1)
+            third = scraper.next_bet(.33)
+            half = scraper.next_bet(.5)
+            threeq = scraper.next_bet(.75)
+            psb = scraper.next_bet(1)
         except:  # noqa: E722
             get_form.game_id.errors = ("""Sorry can't handle this game state
                                           yet.""",)

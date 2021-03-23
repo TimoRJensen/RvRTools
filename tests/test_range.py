@@ -2,7 +2,7 @@ from typing import Union
 import pandas as pd
 import pytest
 
-from pynlh import Range, RangeError, HandError, RangePart, FullRange
+from pynlh import Range, RangeError, HandError, RangePart
 
 
 def test_mixed_suit():
@@ -376,7 +376,7 @@ def test_range_len():
 
 
 def test_full_range():
-    full_range = FullRange()
+    full_range = Range.full_range()
     assert(len(full_range) == 169)
     assert(full_range['54s'] == 100)
 
