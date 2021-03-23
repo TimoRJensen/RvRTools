@@ -30,7 +30,7 @@ class Combo():
                  ) -> None:
         """
         Pynlh's Combo class object.
-        Can be isntanciated either giving it a combo_str like "Ac5d" or
+        Can be instantiated either giving it a combo_str like "Ac5d" or
         via Suits and Rank objects.
         """
         self.combo_str = combo_str
