@@ -10,6 +10,7 @@ from copy import deepcopy
 
 from .hand import Hand
 from .rank import RANKS
+from .combo import Combo
 
 
 class Range():
@@ -86,7 +87,7 @@ class Range():
         return sum_
 
     @property
-    def combos(self) -> list:
+    def combos(self) -> List[Combo]:
         """
         Collects all Combo objects from RangePart objects and
         consolidates them in one list, that is returned
@@ -311,6 +312,7 @@ class RangeError(Exception):
     ERR002_PAIR_LEN_NOT_2 = """The length of a pair Range Part must be exactly
                             2. - ERR002"""
     ERR003_NOT_VALID_CHAR = ' is not a valid character for a range - ERR003'
+    ERR004_TOO_DASHES = 'There are too many dashes in this Range. ERR004'
 
     def __init__(self, range_str: str, msg: str = 'Not a valid range!'):
         self.range_str = range_str
@@ -363,7 +365,7 @@ class RangePart():
         self.hands_str = self.get_hands_str()
 
     @property
-    def combos(self):
+    def combos(self) -> List[Combo]:
         """
         Collects all Combo objects from Hand objects and consolidates them
         in one list, that is returned
@@ -476,6 +478,10 @@ class RangePart():
         s = self.part_no_freq
         start_hand = ''
         if (self.plus not in s) and (self.range_identifier in s):
+            if s.count(self.range_identifier) > 1:
+                raise RangeError(self.part,
+                                 msg=RangeError.ERR004_TOO_DASHES
+                                 )
             start_hand = Hand(handstring=s[:s.find(self.range_identifier)])
             end_hand = Hand(handstring=s[s.find(self.range_identifier) + 1:])
             if len(start_hand) != len(end_hand):

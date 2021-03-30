@@ -26,7 +26,7 @@ class Combo():
                  rank2: Rank = None,
                  suit1: Suit = None,
                  suit2: Suit = None,
-                 freq: float = 0.00,
+                 freq: float = 100.00,
                  ) -> None:
         """
         Pynlh's Combo class object.
