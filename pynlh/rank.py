@@ -56,17 +56,17 @@ class Rank():
     def __str__(self) -> str:
         return self.name
 
-    def __eq__(self, o: object) -> bool:
-        if self.__class__ is not o.__class__:
+    def __eq__(self, other: 'Rank') -> bool:
+        if self.__class__ is not other.__class__:
             return NotImplemented
 
-        return self.order == o.order
+        return self.order == other.order
 
-    def __lt__(self, o: object) -> bool:
-        if self.__class__ is not o.__class__:
+    def __lt__(self, other: 'Rank') -> bool:
+        if self.__class__ is not other.__class__:
             return NotImplemented
 
-        return self.order > o.order
+        return self.order > other.order
 
 
 zipper = dict(zip(NLH_SHORTS, NLH_NAMES))

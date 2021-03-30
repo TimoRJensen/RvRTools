@@ -27,6 +27,13 @@ def test_get_combos_hand_n_type():
     assert(len(hand_nosuit.combos) == 16)
 
 
+def test_hand_combo():
+    combo1 = Hand('AsKs')
+    combo2 = Hand('7s3d')
+    assert(len(combo1) == 1)
+    assert(len(combo2) == 1)
+
+
 def test_get_combos_hand_n_type_freq():
     hand_offsuit = Hand(hand="AJ", hand_type='offsuit', freq=20)
     hand_suited = Hand(hand="AJ", hand_type='suited', freq=20)
@@ -136,7 +143,8 @@ def test_ordering():
 
 
 if __name__ == "__main__":
-    test_get_all_combos_str_handstring()
-    test_get_all_combos_str_hand_n_type()
-    test_hand_index()
-    print('jup')
+    # test_get_all_combos_str_handstring()
+    # test_get_all_combos_str_hand_n_type()
+    # test_hand_index()
+    # print('jup')
+    test_hand_combo()

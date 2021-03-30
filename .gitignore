@@ -135,5 +135,4 @@ dmypy.json
 *.bak
 
 #testing stuff
-foo.py
-bar.py
+foobar.py

@@ -381,6 +381,11 @@ def test_full_range():
     assert(full_range['54s'] == 100)
 
 
+def test_combo_range():
+    combo_range = Range('AsKh,AsKd,AhQs')
+    assert(len(combo_range) == 2)
+
+
 if __name__ == "__main__":
     # test_range_hands()
     # test_range_ranges()
@@ -390,6 +395,8 @@ if __name__ == "__main__":
     # test_range_plus_ranges_freq(True)
     # test_split_range_str_in_parts()
     # test_part_pick_combo()
+    # test_omitted_rank_start()
+    test_tripple_range()
     # plt.show()
     # test_mixed_rank()
-    test_range_subtraction()
+    # test_range_subtraction()
