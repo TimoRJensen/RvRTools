@@ -46,7 +46,7 @@ class History():
             text = Event.purify(event)
             if text in ['Flop:', 'Turn:', 'River:']:
                 self.last_street = text[:-1]
-            player: Player = self.game.get_player_by_name(text.split()[0])
+            player: Player = self.game.get_player_by_name(text)
             if player is None:
                 continue
             e = Event(game=self.game,
@@ -70,9 +70,10 @@ class Event():
         self._parse_text()
 
     def _parse_text(self):
-        if self.player.name != self.text.split()[0]:
+        name_spaces: int = self.player.name.count(' ')
+        if self.player.name not in self.text:
             raise ValueError(f"{self.text} is not a valid Event text.")
-        action = self.text.split()[1]
+        action = self.text.split()[1 + name_spaces]
 
         if action == "checks":
             self.action = "check"
@@ -80,10 +81,10 @@ class Event():
             self.action = 'call'
         elif action == "raises":
             self.action = "raise"
-            self.amount = int(self.text.split()[3])
+            self.amount = int(self.text.split()[3 + name_spaces])
         elif action == "bets":
             self.action = "bet"
-            self.amount = int(self.text.split()[2])
+            self.amount = int(self.text.split()[2 + name_spaces])
         elif action == "folds":
             self.action = "fold"
         else:
@@ -162,9 +163,9 @@ class Game():
     def __repr__(self) -> str:
         return f"Game({self.id})"
 
-    def get_player_by_name(self, name):
+    def get_player_by_name(self, text: str):
         for p in self.players:
-            if name == p.name:
+            if p.name in text:
                 return p
 
     @property
