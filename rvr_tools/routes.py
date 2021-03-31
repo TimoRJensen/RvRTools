@@ -78,7 +78,7 @@ def calculator():
             half = scraper.next_bet(.5)
             threeq = scraper.next_bet(.75)
             psb = scraper.next_bet(1)
-        except:  # noqa: E722
+        except TypeError:  # noqa: E722
             get_form.game_id.errors = ("""Sorry can't handle this game state
                                           yet.""",)
             return render_template('calculator.html',
