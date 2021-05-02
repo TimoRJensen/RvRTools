@@ -1,3 +1,100 @@
+from typing import List, Union
+from random import sample
+from copy import deepcopy
+
+from .hand import Hand
+from .rank import RANKS
+from .combo import Combo
+
+class Range():
+    def __init__(self, input: Union[str, dict]) -> None:
+        self.input = input
+        self.combos_dict: dict = {}
+        self.parts_strs: list = []
+        self.process_input()
+
+    def process_input(self):
+        if isinstance(self.input, str):
+            self.input_clean = self.input.replace(";", ",").replace('\n', '')
+            self.parts_strs = self.split_range_str_in_parts(self.input_clean)
+        elif isinstance(self.input, dict):
+            self.combos_dict = self.input
+
+    @staticmethod
+    def full_range() -> 'Range':
+        return Range('''22+,23o,42o+,52o+,62o+,72o+,82o+,92o+,T2o+,J2o+,Q2o+,
+                        K2o+,A2o+,23s,42s+,52s+,62s+,72s+,82s+,92s+,T2s+,J2s+,
+                        Q2s+,K2s+,A2s+''')
+
+    @staticmethod
+    def split_range_str_in_parts(range_str: str = None) -> List[str]:
+        """
+        Parses the given rangestring and returns a list with it's partial
+        strings in a list.
+        """
+        r_str = ''
+        if range_str is not None:
+            r_str = range_str
+        else:
+            raise AttributeError()
+        read_freq = False
+        read_part = True
+        freq_str = ''
+        part_str = ''
+        freq_end = True
+        rv = []
+        freq = 100
+        for i, chr in enumerate(r_str):
+            if read_freq:
+                freq_str += chr
+            elif read_part:
+                part_str += chr
+            if ((chr == ',') or (i == len(r_str) - 1)):
+                part_str = part_str.replace('[', '').replace(']', '')
+                part_str = part_str.replace(',', '')
+                rv.append(f"[{freq}]{part_str}[/{freq}]")
+                part_str = ''
+                if freq_end:
+                    freq = 100
+                    freq_str = ''
+            if chr == '[':
+                read_freq = True
+                freq_end = False
+            elif chr == ']':
+                if '/' in freq_str:
+                    freq_end = True
+                else:
+                    freq = float(freq_str.replace('[', '').replace(']', ''))
+                read_freq = False
+            else:
+                read_part = True
+        return rv
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
+
 """
 Version: 0.02
 
@@ -13,7 +110,7 @@ from .rank import RANKS
 from .combo import Combo
 
 
-class Range():
+class Range_old():
     def __init__(self, range_str: str):
         '''This class represents a range and is usually defined by a
         range string like 'AA,QQ-TT,AKs,QJo-Q9o,[56.0]KQs-KTs[/56.0]'.
@@ -105,7 +202,7 @@ class Range():
         Validates the range string. Checks for valid characters.
         """
         for ch in self.range_str.upper():
-            if ch not in 'AKQJT9876543210,-OS []./+':
+            if ch not in 'AKQJT9876543210,-OS []./+SDCH':
                 err_msg = ch + RangeError.ERR003_NOT_VALID_CHAR
                 raise RangeError(self.range_str, msg=err_msg)
 
@@ -163,8 +260,8 @@ class Range():
         """
         hands = []
         for h, f in self.converted_range_dict.items():
-            hand = Hand(handstring=h)
-            hand_dict = {'hand': hand.handstring,
+            hand = Hand(input=h)
+            hand_dict = {'hand': hand.input,
                          'group': hand.class_skl_mal,
                          'combos': hand.all_combos_str,
                          'freq': f}
@@ -190,17 +287,16 @@ class Range():
             self.parts.append(RangePart(part=part_str,
                                         my_range_obj=self))
         for part in self.parts:
-            for h in part.hands_str:
+            for h in part.hands:
                 rv[h] = part.freq
         return rv
 
-    def pick_combos(self, as_str=False):
-        if not as_str:
-            return [combo for part in self.parts
+    def pick_combos(self):
+        return [combo for part in self.parts
                     for combo in part.pick_combos()]
 
-        combos_list = [str(combo) for part in self.parts
-                       for combo in part.pick_combos()]
+    def pick_combos_str(self):
+        combos_list = [part.pick_combos_str() for part in self.parts]
         return ','.join(combos_list)
 
     def randomize_suits_for_range(self,
@@ -225,7 +321,7 @@ class Range():
         rv = ''
         if grouping == 'by_hand':
             for h, f in self.converted_range_dict.items():
-                hand = Hand(handstring=h)
+                hand = Hand(input=h)
                 no_of_combos = (f/100) * len(hand.all_combos_str)
                 combos_list.append(
                     sample(hand.all_combos_str, round(no_of_combos)))
@@ -362,7 +458,14 @@ class RangePart():
         if not self.freq:
             self.freq = self.get_freq()
         self.part_no_freq = self.remove_freq_tag()
-        self.hands_str = self.get_hands_str()
+        self.hands: List[Hand] = self._set_hands()
+        # self.hands_str = self.get_hands_str()
+
+    def _set_hands(self) -> List[Hand]:
+        if self.is_range:
+            return self.get_hands_from_range()
+        else:
+            return [Hand(self.part_no_freq)]
 
     @property
     def combos(self) -> List[Combo]:
@@ -388,11 +491,6 @@ class RangePart():
         plus = self.plus
         return (plus in no_freq) and (no_freq[-1:] == plus)
 
-    @property
-    def hands(self) -> List[Hand]:
-        return [Hand(handstring=hand, freq=self.freq)
-                for hand in self.hands_str]
-
     def __repr__(self) -> str:
         return f"{self.__class__.__name__}(part={self.part})"
 
@@ -403,6 +501,7 @@ class RangePart():
         """
         Gets hands from range string. Returns a list of all hands.
         """
+        raise NotImplementedError
         if self.is_range:
             return self.get_hands_from_range()
         if self.part_no_freq[0] == self.part_no_freq[1]:
@@ -411,11 +510,13 @@ class RangePart():
                                  msg=RangeError.ERR002_PAIR_LEN_NOT_2)
             return [self.part_no_freq]
         else:
-            hand = Hand(handstring=self.part_no_freq)
+            hand = Hand(input=self.part_no_freq)
             if hand.hand_type == 'nosuit':
                 return [self.part_no_freq + 's', self.part_no_freq + 'o']
             elif hand.hand_type in ['suited', 'offsuit']:
                 return [self.part_no_freq]
+            elif hand.hand_type == 'pair':
+                return [hand.hand]
             else:
                 raise RangeError(self.part)
 
@@ -451,14 +552,14 @@ class RangePart():
             start_x = end_x
             start_y = end_x + 1
         elif end_hand.hand_type == 'pair':
-            return Hand(handstring='AA')
+            return Hand(input='AA')
         else:
             raise RangeError(self.part)
         d = self.my_range_obj.hands_dict.items()
         rv_list = [hand for hand, (_, x, y) in d if ((x == start_x)
                                                      and (start_y == y))]
         if len(rv_list) == 1:
-            return Hand(handstring=rv_list[0])
+            return Hand(input=rv_list[0])
         else:
             raise RangeError(self.part_no_freq)
 
@@ -482,15 +583,15 @@ class RangePart():
                 raise RangeError(self.part,
                                  msg=RangeError.ERR004_TOO_DASHES
                                  )
-            start_hand = Hand(handstring=s[:s.find(self.range_identifier)])
-            end_hand = Hand(handstring=s[s.find(self.range_identifier) + 1:])
+            start_hand = Hand(input=s[:s.find(self.range_identifier)])
+            end_hand = Hand(input=s[s.find(self.range_identifier) + 1:])
             if len(start_hand) != len(end_hand):
                 raise RangeError(self.part,
                                  msg=RangeError.ERR001_LEN_NOT_EQUAL)
             elif start_hand.hand_type != end_hand.hand_type:
                 raise RangeError(self.part)
         elif self.is_plus_range:
-            end_hand = Hand(handstring=s.replace(self.plus, ''))
+            end_hand = Hand(input=s.replace(self.plus, ''))
             start_hand = self.get_start_hand_for_plus_range(end_hand)
         else:
             raise RangeError(self.part)
@@ -499,7 +600,7 @@ class RangePart():
         end_x = end_hand.index_x
         end_y = end_hand.index_y
 
-        rv.append(start_hand.handstring)
+        rv.append(start_hand)
         new_hands_dict = {}
         h = self.my_range_obj.hands_dict
         if start_hand.hand_type == 'pair':
@@ -534,16 +635,16 @@ class RangePart():
                                                       and (x == end_x))
             }
         for key in new_hands_dict:
-            rv.append(Hand(handstring=key).handstring)
-        rv.append(end_hand.handstring)
+            rv.append(Hand(input=key))
+        rv.append(end_hand)
         return rv
 
-    def pick_combos(self, as_str=False):
-        if not as_str:
-            return [combo for hand in self.hands
-                    for combo in hand.pick_combos()]
-        combos_list = [str(combo) for hand in self.hands
-                       for combo in hand.pick_combos()]
+    def pick_combos(self) -> List[Combo]:
+        return [combo for hand in self.hands
+                for combo in hand.pick_combos()]
+
+    def pick_combos_str(self) -> str:
+        combos_list = [hand.pick_combos_str() for hand in self.hands]
         return ','.join(combos_list)
 
     def remove_freq_tag(self):

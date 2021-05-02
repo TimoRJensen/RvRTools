@@ -1,8 +1,3 @@
-from functools import total_ordering
-
-from .rank import NLH_NAMES, NLH_SHORTS
-
-
 NLH_SHORTS = 'csdh'
 NLH_NAMES = ['Club', 'Spade', 'Diamond', 'Heart']
 

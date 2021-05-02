@@ -4,6 +4,7 @@ from functools import total_ordering
 NLH_SHORTS = 'AKQJT98765432'
 NLH_NAMES = ['Ace', 'King', 'Queen', 'Jack', 'Ten', 'Nine', 'Eight', 'Seven',
              'Six', 'Five', 'Four', 'Three', 'Deuce']
+ZIPPER = dict(zip(NLH_SHORTS, NLH_NAMES))
 
 
 class RankError(Exception):
@@ -24,13 +25,17 @@ class RankError(Exception):
 @total_ordering
 class Rank():
 
-    def __init__(self, name: str, order: int, short: str) -> None:
+    def __init__(self,
+                 short: str,
+                 name: str = None,
+                 order: int = None,
+                 ) -> None:
         """
         Pynlh's Rank class Object.
         """
-        self.name = name
-        self.order = order
         self.short = short
+        self.order = order if order is not None else (NLH_SHORTS.find(short)+1)
+        self.name = name if name is not None else (ZIPPER[short])
         self.check_input()
 
     def check_input(self):
@@ -50,8 +55,8 @@ class Rank():
             raise ValueError('The attribute "short" has to be of type str.')
 
     def __repr__(self) -> str:
-        return f"""Rank(name={self.name}, order={self.order},
-                short={self.short})"""
+        return (f"Rank(short={self.short}, name={self.name}" +
+                f", order={self.order})")
 
     def __str__(self) -> str:
         return self.name
@@ -69,10 +74,8 @@ class Rank():
         return self.order > other.order
 
 
-zipper = dict(zip(NLH_SHORTS, NLH_NAMES))
-
-RANKS = tuple(Rank(name=zipper[rank], short=rank, order=i + 1)
-              for i, rank in enumerate(zipper)
+RANKS = tuple(Rank(short=short)
+              for short in NLH_SHORTS
               )
 
 RANKS = dict(zip(NLH_SHORTS, RANKS))

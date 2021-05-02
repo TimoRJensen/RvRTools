@@ -33,7 +33,7 @@ def randomize():
     if form.validate_on_submit():
         range_ = Range(form.range_str.data)
         # range_str = range_.randomize_suits_for_range()  # old randomizer
-        range_str = range_.pick_combos(as_str=True)
+        range_str = range_.pick_combos_str()
         # flash('successfully randomized', 'success')
         return render_template('randomize.html',
                                titel='Randomizer',

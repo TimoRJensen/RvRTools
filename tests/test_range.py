@@ -351,12 +351,36 @@ def test_range_subtraction():
     assert(range_50['AA'] == 50)
 
 
+def test_range_subtraction():
+    range_50 = Range('[50]AA[/50],KK-JJ')
+    range_15 = Range('[15]AA[/15],JJ,KcKh')
+    range_diff = range_50 - range_15
+    assert('JJ' not in range_diff)
+    assert('KK' in range_diff)
+    assert('KcKh' not in range_diff)
+    assert(range_diff['KK'] < 100)
+    assert(range_diff['AA'] == 35)
+    assert(range_50['AA'] == 50)
+
+
 def test_range_addition():
     range_50 = Range('[50]AA[/50],KK-JJ')
     range_15 = Range('[15]AA[/15],TT')
     range_sum = range_50 + range_15
     assert('TT' in range_sum)
     assert('99' not in range_sum)
+    assert(range_sum['AA'] == 65)
+    assert(range_50['AA'] == 50)
+    assert(range_15['AA'] == 15)
+
+
+def test_range_addition_with_combos():
+    range_50 = Range('[50]AA[/50],KK-JJ')
+    range_15 = Range('[15]AA[/15],TT,9c9s,[10]8s8c[/]')
+    range_sum = range_50 + range_15
+    assert('TT' in range_sum)
+    assert('66' not in range_sum)
+    assert('99' in range_sum)
     assert(range_sum['AA'] == 65)
     assert(range_50['AA'] == 50)
     assert(range_15['AA'] == 15)
@@ -383,7 +407,14 @@ def test_full_range():
 
 def test_combo_range():
     combo_range = Range('AsKh,AsKd,AhQs')
-    assert(len(combo_range) == 2)
+    assert(len(combo_range) == 3)
+
+
+def test_combo_contain():
+    combo_range = Range('AsKh,AsKd,AhQs')
+    assert(combo_range['AsKh'] == 100)
+    assert('AsKh' in combo_range)
+    assert('AhKh' not in combo_range)
 
 
 if __name__ == "__main__":
@@ -395,8 +426,8 @@ if __name__ == "__main__":
     # test_range_plus_ranges_freq(True)
     # test_split_range_str_in_parts()
     # test_part_pick_combo()
-    # test_omitted_rank_start()
-    test_tripple_range()
+    test_omitted_rank_start()
+    # test_tripple_range()
     # plt.show()
     # test_mixed_rank()
     # test_range_subtraction()

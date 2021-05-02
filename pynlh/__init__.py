@@ -5,3 +5,4 @@ from .suit import SUITS, Suit  # noqa: F401,E402
 from .range import Range, RangePart, RangeError  # noqa: F401,E402
 from .tools import timer  # noqa: F401,E402
 from .strategy import Strategy  # noqa: F401,E402
+from .card import Card, CARDS
