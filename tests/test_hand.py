@@ -68,37 +68,16 @@ def test_pick_combos():
     hand_pair = Hand(input='22', input_freq=20)
     hand_nosuit = Hand(input='92', input_freq=20)
 
-    assert(len(hand_offsuit.pick_combos()) < 13 or hand_offsuit == [])
-    assert(hand_offsuit.pick_combos() is not None)
-    assert(len(hand_suited.pick_combos()) < 5 or hand_suited == [])
-    assert(hand_suited.pick_combos() is not None)
-    assert(len(hand_pair.pick_combos()) < 7 or hand_pair == [])
-    assert(hand_pair.pick_combos() is not None)
-    assert(len(hand_nosuit.pick_combos()) < 17 or hand_offsuit == [])
-    assert(hand_nosuit.pick_combos() is not None)
-    for combo in hand_nosuit.pick_combos():
+    assert(len(hand_offsuit.apply_rng()) < 13 or hand_offsuit == [])
+    assert(hand_offsuit.apply_rng() is not None)
+    assert(len(hand_suited.apply_rng()) < 5 or hand_suited == [])
+    assert(hand_suited.apply_rng() is not None)
+    assert(len(hand_pair.apply_rng()) < 7 or hand_pair == [])
+    assert(hand_pair.apply_rng() is not None)
+    assert(len(hand_nosuit.apply_rng()) < 17 or hand_offsuit == [])
+    assert(hand_nosuit.apply_rng() is not None)
+    for combo in hand_nosuit.apply_rng():
         assert(isinstance(combo, Combo))
-
-
-def test_pick_combos_str():
-    hand_offsuit = Hand(input='QJo', input_freq=20)
-    hand_suited = Hand(input='QJs', input_freq=20)
-    hand_pair = Hand(input='22', input_freq=20)
-    hand_nosuit = Hand(input='92', input_freq=20)
-
-    assert(len(hand_offsuit.pick_combos_str()) < (13 * 4)
-           or hand_offsuit.pick_combos_str == '')
-    assert(hand_offsuit.pick_combos_str() is not None)
-    assert(len(hand_suited.pick_combos_str()) < (5 * 4)
-           or hand_suited.pick_combos_str == '')
-    assert(hand_suited.pick_combos_str() is not None)
-    assert(len(hand_pair.pick_combos_str()) < (7 * 4)
-           or hand_pair.pick_combos_str == '')
-    assert(hand_pair.pick_combos_str() is not None)
-    assert(len(hand_nosuit.pick_combos_str()) < (17 * 4)
-           or hand_offsuit.pick_combos_str == '')
-    assert(hand_nosuit.pick_combos_str() is not None)
-    assert(isinstance(hand_nosuit.pick_combos_str(), str))
 
 
 def test_ordering():
@@ -130,5 +109,6 @@ if __name__ == "__main__":
     # test_get_all_combos_str_hand_n_type()
     # test_hand_index()
     # print('jup')
-    test_hand_combo()
-    test_pick_combos_str()
+    # test_hand_combo()
+    # test_pick_combos_str()
+    test_ordering()

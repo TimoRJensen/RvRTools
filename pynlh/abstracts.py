@@ -10,4 +10,3 @@ class PynlhComponent(ABC):
 
 class ComboComposite(PynlhComponent, ABC):
     pass
-

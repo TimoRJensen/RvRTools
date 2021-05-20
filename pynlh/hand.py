@@ -1,9 +1,8 @@
 from functools import total_ordering
-from typing import List, Dict
+from typing import List, Dict, Union
 
-from .rank import RANKS, Rank
-from .suit import SUITS, Suit
-from .card import CARDS, Card
+from .rank import Rank
+from .suit import SUITS
 from .combo import Combo
 
 
@@ -33,63 +32,75 @@ class Hand():
             input (str): [description]
             input_freq (float, optional): [description]. Defaults to 100.
         """
-        self.input: str = input
-        self._reorder_combo_input()
-        self.input_freq: float = input_freq
+        self.input: Union[str, dict] = input
+        # self._reorder_combo_input()
+        self.freq: float = input_freq
         self.hand: str = ''  # set by _parse_input()
         self.rank1: Rank = None  # set by _parse_input()
         self.rank2: Rank = None  # set by _parse_input()
         self.hand_type: str = ''  # set by _parse_input()
         self.handstring: str = ''  # set by _parse_input()
         self.combos: Dict[Combo] = {}  # set by _parse_input()
-        self.freq: float = 0.00  # set by _parse_input()
         self._parse_input()
         self.class_skl_mal = self.get_sklansky_malmuth_handclass()
 
-    def _reorder_combo_input(self) -> None:
-        if not self._input_is_combo:
-            return None
-
-        is_RRss_format: bool = ((self.input[0].upper() in RANKS)
-                                and (self.input[1].upper() in RANKS)
-                                and (self.input[2].lower() in SUITS)
-                                and (self.input[3].lower() in SUITS))
-        is_RsRs_format: bool = ((self.input[0].upper() in RANKS)
-                                and (self.input[1].lower() in SUITS)
-                                and (self.input[2].upper() in RANKS)
-                                and (self.input[3].lower() in SUITS))
-        if is_RRss_format:
-            rank1 = self.input[0].upper()
-            rank2 = self.input[1].upper()
-            suit1 = self.input[2].lower()
-            suit2 = self.input[3].lower()
-        elif is_RsRs_format:
-            r1 = self.input[0].upper()
-            r2 = self.input[2].upper()
-            s1 = self.input[1].lower()
-            s2 = self.input[3].lower()
-        else:
-            raise HandError(self)
-        if list(RANKS.keys()).index(r1) < list(RANKS.keys()).index(r2):
-            rank1 = r1
-            rank2 = r2
-        else:
-            rank1 = r2
-            rank2 = r1
-        if list(SUITS.keys()).index(s1) < list(SUITS.keys()).index(s2):
-            suit1 = s1
-            suit2 = s2
-        else:
-            suit1 = s2
-            suit2 = s1
-        self.input = rank1 + suit1 + rank2 + suit2
-
     def _parse_input(self) -> None:
-        self._parse_hand_from_input()
-        self.hand_type = self._parse_hand_type_from_input()
-        self._parse_handstring_from_input()
-        self._set_combos()
-        self.freq = self._avg([combo.freq for _, combo in self.combos.items()])
+        if isinstance(self.input, str):
+            self._parse_hand_from_input()
+            self.hand_type = self._parse_hand_type_from_input()
+            self._parse_handstring_from_input()
+            self._set_combos()
+        elif isinstance(self.input, dict):
+            for k, v in self.input.items():
+                if not isinstance(k, str):
+                    raise TypeError('The keys for input dictionaries must be'
+                                    ' of type str')
+                if not isinstance(v, Combo):
+                    raise TypeError('The values for input dictionaries must be'
+                                    ' of type Combo')
+            self.combos = input
+        else:
+            raise TypeError('Input must be of type str or Dict[Combo].')
+
+    # def _reorder_combo_input(self) -> None:
+    #     raise NotImplementedError('Hier hab ich echt
+    #     Quatsch gemacht: AsKh -> AhKs!')
+    #     if not self._input_is_combo:
+    #         return None
+
+    #     is_RRss_format: bool = ((self.input[0].upper() in RANKS)
+    #                             and (self.input[1].upper() in RANKS)
+    #                             and (self.input[2].lower() in SUITS)
+    #                             and (self.input[3].lower() in SUITS))
+    #     is_RsRs_format: bool = ((self.input[0].upper() in RANKS)
+    #                             and (self.input[1].lower() in SUITS)
+    #                             and (self.input[2].upper() in RANKS)
+    #                             and (self.input[3].lower() in SUITS))
+    #     if is_RRss_format:
+    #         rank1 = self.input[0].upper()
+    #         rank2 = self.input[1].upper()
+    #         suit1 = self.input[2].lower()
+    #         suit2 = self.input[3].lower()
+    #     elif is_RsRs_format:
+    #         r1 = self.input[0].upper()
+    #         r2 = self.input[2].upper()
+    #         s1 = self.input[1].lower()
+    #         s2 = self.input[3].lower()
+    #     else:
+    #         raise HandError(self)
+    #     if list(RANKS.keys()).index(r1) < list(RANKS.keys()).index(r2):
+    #         rank1 = r1
+    #         rank2 = r2
+    #     else:
+    #         rank1 = r2
+    #         rank2 = r1
+    #     if list(SUITS.keys()).index(s1) < list(SUITS.keys()).index(s2):
+    #         suit1 = s1
+    #         suit2 = s2
+    #     else:
+    #         suit1 = s2
+    #         suit2 = s1
+    #     self.input = rank1 + suit1 + rank2 + suit2
 
     @staticmethod
     def _avg(lst) -> float:
@@ -98,6 +109,10 @@ class Hand():
     @property
     def _input_is_combo(self) -> bool:
         return len(self.input) == 4
+
+    def _get_one_combo(self) -> Combo:
+        for _, combo in self.combos.items():
+            return combo
 
     def _parse_hand_from_input(self) -> None:
         if self._input_is_combo:
@@ -124,16 +139,18 @@ class Hand():
                 raise HandError
         else:
             if len(input) == 2:
-                if input[0] == input[1]:
-                    return "pair"
-                else:
+                if input[0] != input[1]:
                     return "nosuit"
+                elif (self.rank1 == self.rank2):
+                    return "pair"
             elif len(input) == 3:
                 suit = input[2].lower()
-                if suit == "s":
-                    return "suited"
-                elif suit == "o":
+                if (self.rank1 == self.rank2):
+                    raise HandError(self, msg='Pairs cannot have a type (o/s)')
+                if suit == "o":
                     return "offsuit"
+                elif suit == "s":
+                    return "suited"
             else:
                 raise HandError
 
@@ -146,38 +163,20 @@ class Hand():
 
     def _set_combos(self) -> None:
         if not self._input_is_combo:
-            self.combos = {combo: Combo(combo_str=combo, freq=self.input_freq)
+            self.combos = {combo: Combo(input=combo, freq=self.freq)
                            for combo in self.all_combos_str}
         else:
-            self.combos = {combo: Combo(combo_str=combo, freq=0)
-                           for combo in self.all_combos_str}
-            self.combos[self.input].freq = self.input_freq
+            self.combos[self.input] = Combo(self.input, self.freq)
 
     def __eq__(self, o: 'Hand') -> bool:
         if not isinstance(o, Hand):
             return NotImplemented
-        return self.handstring == o.handstring
+        return self._get_one_combo() == o._get_one_combo()
 
     def __gt__(self, o: 'Hand') -> bool:
         if not isinstance(o, Hand):
             return NotImplemented
-        if self.hand_type == 'pair' and o.hand_type != 'pair':
-            return True
-        elif self.rank1 < o.rank1:
-            return False
-        elif self.rank1 > o.rank1:
-            return True
-        elif self.rank1 == o.rank1 and self.rank2 < o.rank2:
-            return False
-        elif self.rank1 == o.rank1 and self.rank2 > o.rank2:
-            return True
-        elif ((self.hand_type == 'suited') and
-              (o.hand_type in ['offsuit', 'nosuit'])):
-            return True
-        elif self.hand_type == 'nosuit' and o.hand_type == 'offsuit':
-            return True
-        else:
-            return False
+        return self._get_one_combo() > o._get_one_combo()
 
     def __len__(self) -> int:
         actual_combos = [combo for _,
@@ -278,16 +277,30 @@ class Hand():
     def __delitem__(self, combo):
         del self.combos[combo]
 
-    def __setitem__(self, combo :str, freq):
+    def __setitem__(self, combo: str, freq):
         self.combos[combo] = freq
 
     def __getitem__(self, combo) -> Combo:
         return self.combos[combo]
 
-    def pick_combos(self) -> List[Combo]:
-        return [combo for _, combo in self.combos.items() if combo.pick()]
+    def apply_rng(self) -> List[Combo]:
+        return [combo for _, combo in self.combos.items() if combo.apply_rng()]
 
-    def pick_combos_str(self) -> str:
-        combos_list = [str(combo)
-                       for _, combo in self.combos.items() if combo.pick()]
-        return ','.join(combos_list)
+    def get_combos(self) -> List[Combo]:
+        return [combo for _, combo in self.combos.items()]
+
+
+class NoSuitHand(Hand):
+    pass
+
+
+class SuitedHand(Hand):
+    pass
+
+
+class OffsuitHand(Hand):
+    pass
+
+
+class PairHand(Hand):
+    pass

@@ -1,3 +1,5 @@
+import re
+from functools import total_ordering
 from .rank import Rank, RANKS
 from .suit import Suit, SUITS
 
@@ -17,6 +19,7 @@ class CardError(Exception):
         return f"'{self.card.rank, self.card.suit}' -> {self.msg}"
 
 
+@total_ordering
 class Card():
     def __init__(self,
                  rank: Rank,
@@ -24,11 +27,34 @@ class Card():
                  ) -> None:
         self.rank = rank
         self.suit = suit
-        if (rank not in RANKS) or (suit not in SUITS):
-            raise CardError(self)
+        if ((not isinstance(self.rank, Rank))
+                or (not isinstance(self.suit, Suit))):
+            raise CardError
+
+    @classmethod
+    def from_str(cls, input: str) -> 'Card':
+        rank_suit = re.compile(f'^[{RANKS}][{SUITS}]$', flags=re.IGNORECASE)
+        suit_rank = re.compile(f'^[{SUITS}][{RANKS}]$', flags=re.IGNORECASE)
+        if rank_suit.match(input):
+            return cls(Rank(input[0]), Suit(input[1]))
+        if suit_rank.match(input):
+            return cls(Rank(input[1]), Suit(input[0]))
+
+    def __eq__(self, other: 'Card') -> bool:
+        if self.__class__ is not other.__class__:
+            return NotImplemented
+        return (self.rank == other.rank) and (self.suit == other.suit)
+
+    def __gt__(self, other: 'Card') -> bool:
+        if self.__class__ is not other.__class__:
+            return NotImplemented
+        if self.rank != other.rank:
+            return self.rank < other.rank
+        else:
+            return self.suit < other.suit
 
 
 CARDS = []
 for rank in RANKS:
     for suit in SUITS:
-        CARDS.append(Card(rank, suit))
+        CARDS.append(Card.from_str(rank + suit))

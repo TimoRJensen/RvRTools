@@ -7,7 +7,8 @@ from pynlh import Range, RangeError, HandError, RangePart
 
 def test_mixed_suit():
     with pytest.raises(RangeError):
-        Range('KQs-K9o')
+        r = Range('KQs-K9o')
+        print(r)
 
 
 def test_mixed_rank():
@@ -41,7 +42,7 @@ def test_tripple_range():
 
 
 def test_suited_pair():
-    with pytest.raises(RangeError):
+    with pytest.raises(HandError):
         Range('JJs')
 
 
@@ -98,71 +99,71 @@ def test_not_expected_char():
 #     assert(len(range_2gap_o.converted_range_dict) == 7)
 
 
-def test_range_hands():
-    range_hands = Range('AA,KK,AKs,AKo,97o,97s')
-    assert(range_hands.converted_range_dict['AA'] == 100)
-    assert(range_hands.converted_range_dict['KK'] == 100)
-    assert(range_hands.converted_range_dict['AKo'] == 100)
-    assert(range_hands.converted_range_dict['AKs'] == 100)
-    assert(range_hands.converted_range_dict['97o'] == 100)
-    assert(range_hands.converted_range_dict['97s'] == 100)
-    assert(len(range_hands.converted_range_dict) == 6)
+# def test_range_hands():
+#     range_hands = Range('AA,KK,AKs,AKo,97o,97s')
+#     assert(range_hands.converted_range_dict['AA'] == 100)
+#     assert(range_hands.converted_range_dict['KK'] == 100)
+#     assert(range_hands.converted_range_dict['AKo'] == 100)
+#     assert(range_hands.converted_range_dict['AKs'] == 100)
+#     assert(range_hands.converted_range_dict['97o'] == 100)
+#     assert(range_hands.converted_range_dict['97s'] == 100)
+#     assert(len(range_hands.converted_range_dict) == 6)
 
 
-def test_range_ranges():
-    range_ranges = Range('AA-JJ,AKs-ATs,KQo-K5o')
-    assert(range_ranges.converted_range_dict['AA'] == 100)
-    assert(range_ranges.converted_range_dict['KK'] == 100)
-    assert(range_ranges.converted_range_dict['QQ'] == 100)
-    assert(range_ranges.converted_range_dict['JJ'] == 100)
-    assert(range_ranges.converted_range_dict['AKs'] == 100)
-    assert(range_ranges.converted_range_dict['AQs'] == 100)
-    assert(range_ranges.converted_range_dict['AJs'] == 100)
-    assert(range_ranges.converted_range_dict['ATs'] == 100)
-    assert(range_ranges.converted_range_dict['KQo'] == 100)
-    assert(range_ranges.converted_range_dict['KJo'] == 100)
-    assert(range_ranges.converted_range_dict['KTo'] == 100)
-    assert(range_ranges.converted_range_dict['K9o'] == 100)
-    assert(range_ranges.converted_range_dict['K8o'] == 100)
-    assert(range_ranges.converted_range_dict['K7o'] == 100)
-    assert(range_ranges.converted_range_dict['K6o'] == 100)
-    assert(range_ranges.converted_range_dict['K5o'] == 100)
-    assert(len(range_ranges.converted_range_dict) == 16)
+# def test_range_ranges():
+#     range_ranges = Range('AA-JJ,AKs-ATs,KQo-K5o')
+#     assert(range_ranges.converted_range_dict['AA'] == 100)
+#     assert(range_ranges.converted_range_dict['KK'] == 100)
+#     assert(range_ranges.converted_range_dict['QQ'] == 100)
+#     assert(range_ranges.converted_range_dict['JJ'] == 100)
+#     assert(range_ranges.converted_range_dict['AKs'] == 100)
+#     assert(range_ranges.converted_range_dict['AQs'] == 100)
+#     assert(range_ranges.converted_range_dict['AJs'] == 100)
+#     assert(range_ranges.converted_range_dict['ATs'] == 100)
+#     assert(range_ranges.converted_range_dict['KQo'] == 100)
+#     assert(range_ranges.converted_range_dict['KJo'] == 100)
+#     assert(range_ranges.converted_range_dict['KTo'] == 100)
+#     assert(range_ranges.converted_range_dict['K9o'] == 100)
+#     assert(range_ranges.converted_range_dict['K8o'] == 100)
+#     assert(range_ranges.converted_range_dict['K7o'] == 100)
+#     assert(range_ranges.converted_range_dict['K6o'] == 100)
+#     assert(range_ranges.converted_range_dict['K5o'] == 100)
+#     assert(len(range_ranges.converted_range_dict) == 16)
 
 
 def test_range_plus_ranges():
     range_plus_ranges = Range('22+,A5s+,A6o+')
-    assert(range_plus_ranges.converted_range_dict['AA'] == 100)
-    assert(range_plus_ranges.converted_range_dict['KK'] == 100)
-    assert(range_plus_ranges.converted_range_dict['QQ'] == 100)
-    assert(range_plus_ranges.converted_range_dict['JJ'] == 100)
-    assert(range_plus_ranges.converted_range_dict['TT'] == 100)
-    assert(range_plus_ranges.converted_range_dict['99'] == 100)
-    assert(range_plus_ranges.converted_range_dict['88'] == 100)
-    assert(range_plus_ranges.converted_range_dict['77'] == 100)
-    assert(range_plus_ranges.converted_range_dict['66'] == 100)
-    assert(range_plus_ranges.converted_range_dict['55'] == 100)
-    assert(range_plus_ranges.converted_range_dict['44'] == 100)
-    assert(range_plus_ranges.converted_range_dict['33'] == 100)
-    assert(range_plus_ranges.converted_range_dict['22'] == 100)
-    assert(range_plus_ranges.converted_range_dict['AKs'] == 100)
-    assert(range_plus_ranges.converted_range_dict['AQs'] == 100)
-    assert(range_plus_ranges.converted_range_dict['AJs'] == 100)
-    assert(range_plus_ranges.converted_range_dict['ATs'] == 100)
-    assert(range_plus_ranges.converted_range_dict['A9s'] == 100)
-    assert(range_plus_ranges.converted_range_dict['A8s'] == 100)
-    assert(range_plus_ranges.converted_range_dict['A7s'] == 100)
-    assert(range_plus_ranges.converted_range_dict['A6s'] == 100)
-    assert(range_plus_ranges.converted_range_dict['A5s'] == 100)
-    assert(range_plus_ranges.converted_range_dict['AKo'] == 100)
-    assert(range_plus_ranges.converted_range_dict['AQo'] == 100)
-    assert(range_plus_ranges.converted_range_dict['AJo'] == 100)
-    assert(range_plus_ranges.converted_range_dict['ATo'] == 100)
-    assert(range_plus_ranges.converted_range_dict['A9o'] == 100)
-    assert(range_plus_ranges.converted_range_dict['A8o'] == 100)
-    assert(range_plus_ranges.converted_range_dict['A7o'] == 100)
-    assert(range_plus_ranges.converted_range_dict['A6o'] == 100)
-    assert(len(range_plus_ranges.converted_range_dict) == 30)
+    assert('AA' in range_plus_ranges)
+    assert('KK' in range_plus_ranges)
+    assert('QQ' in range_plus_ranges)
+    assert('JJ' in range_plus_ranges)
+    assert('TT' in range_plus_ranges)
+    assert('99' in range_plus_ranges)
+    assert('88' in range_plus_ranges)
+    assert('77' in range_plus_ranges)
+    assert('66' in range_plus_ranges)
+    assert('55' in range_plus_ranges)
+    assert('44' in range_plus_ranges)
+    assert('33' in range_plus_ranges)
+    assert('22' in range_plus_ranges)
+    assert('AKs' in range_plus_ranges)
+    assert('AQs' in range_plus_ranges)
+    assert('AJs' in range_plus_ranges)
+    assert('ATs' in range_plus_ranges)
+    assert('A9s' in range_plus_ranges)
+    assert('A8s' in range_plus_ranges)
+    assert('A7s' in range_plus_ranges)
+    assert('A6s' in range_plus_ranges)
+    assert('A5s' in range_plus_ranges)
+    assert('AKo' in range_plus_ranges)
+    assert('AQo' in range_plus_ranges)
+    assert('AJo' in range_plus_ranges)
+    assert('ATo' in range_plus_ranges)
+    assert('A9o' in range_plus_ranges)
+    assert('A8o' in range_plus_ranges)
+    assert('A7o' in range_plus_ranges)
+    assert('A6o' in range_plus_ranges)
+    assert(len(range_plus_ranges) == 210)
 
 
 def test_range_hands_freq():
@@ -199,50 +200,49 @@ def test_range_ranges_freq():
     assert(len(range_ranges_freq.converted_range_dict) == 16)
 
 
-def test_range_plus_ranges_freq(debug=False):
+def test_range_plus_ranges_freq():
     range_plus_ranges_freq = Range('[20]22+,A2s+[/20],[2]A6o+[/2]')
-    if debug:
-        print(range_plus_ranges_freq.converted_range_dict)
-    assert(range_plus_ranges_freq.converted_range_dict['AA'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['KK'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['QQ'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['JJ'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['TT'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['99'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['88'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['77'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['66'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['55'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['44'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['33'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['22'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['AKs'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['AQs'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['AJs'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['ATs'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['A9s'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['A8s'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['A7s'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['A6s'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['A5s'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['A4s'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['A3s'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['A2s'] == 20)
-    assert(range_plus_ranges_freq.converted_range_dict['AKo'] == 2)
-    assert(range_plus_ranges_freq.converted_range_dict['AQo'] == 2)
-    assert(range_plus_ranges_freq.converted_range_dict['AJo'] == 2)
-    assert(range_plus_ranges_freq.converted_range_dict['ATo'] == 2)
-    assert(range_plus_ranges_freq.converted_range_dict['A9o'] == 2)
-    assert(range_plus_ranges_freq.converted_range_dict['A8o'] == 2)
-    assert(range_plus_ranges_freq.converted_range_dict['A7o'] == 2)
-    assert(range_plus_ranges_freq.converted_range_dict['A6o'] == 2)
-    assert(len(range_plus_ranges_freq.converted_range_dict) == 33)
+    assert(range_plus_ranges_freq['AsAc'].freq == 20)
+    assert(range_plus_ranges_freq['KsKc'].freq == 20)
+    assert(range_plus_ranges_freq['QsQc'].freq == 20)
+    assert(range_plus_ranges_freq['JsJc'].freq == 20)
+    assert(range_plus_ranges_freq['TsTc'].freq == 20)
+    assert(range_plus_ranges_freq['9s9c'].freq == 20)
+    assert(range_plus_ranges_freq['8s8c'].freq == 20)
+    assert(range_plus_ranges_freq['7s7c'].freq == 20)
+    assert(range_plus_ranges_freq['6s6c'].freq == 20)
+    assert(range_plus_ranges_freq['5s5c'].freq == 20)
+    assert(range_plus_ranges_freq['4s4c'].freq == 20)
+    assert(range_plus_ranges_freq['3s3c'].freq == 20)
+    assert(range_plus_ranges_freq['2s2c'].freq == 20)
+    assert(range_plus_ranges_freq['AsKs'].freq == 20)
+    assert(range_plus_ranges_freq['AsQs'].freq == 20)
+    assert(range_plus_ranges_freq['AsJs'].freq == 20)
+    assert(range_plus_ranges_freq['AsTs'].freq == 20)
+    assert(range_plus_ranges_freq['As9s'].freq == 20)
+    assert(range_plus_ranges_freq['As8s'].freq == 20)
+    assert(range_plus_ranges_freq['As7s'].freq == 20)
+    assert(range_plus_ranges_freq['As6s'].freq == 20)
+    assert(range_plus_ranges_freq['As5s'].freq == 20)
+    assert(range_plus_ranges_freq['As4s'].freq == 20)
+    assert(range_plus_ranges_freq['As3s'].freq == 20)
+    assert(range_plus_ranges_freq['As2s'].freq == 20)
+    assert(range_plus_ranges_freq['AsKh'].freq == 2)
+    assert(range_plus_ranges_freq['AsQh'].freq == 2)
+    assert(range_plus_ranges_freq['AsJh'].freq == 2)
+    assert(range_plus_ranges_freq['AsTh'].freq == 2)
+    assert(range_plus_ranges_freq['As9h'].freq == 2)
+    assert(range_plus_ranges_freq['As8h'].freq == 2)
+    assert(range_plus_ranges_freq['As7h'].freq == 2)
+    assert(range_plus_ranges_freq['As6h'].freq == 2)
+    assert(len(range_plus_ranges_freq) == ((13 * 6) + (13 * 4) + (8 * 12)))
 
 
 def test_hand_no_suit():
-    range = Range('54')
-    assert(range.converted_range_dict['54s'] == 100)
-    assert(range.converted_range_dict['54o'] == 100)
+    r = Range('54')
+    assert('54s' in r)
+    assert('54o' in r)
+    assert('65s' not in r)
 
 
 # def test_hand_no_suit_plus():
@@ -267,7 +267,7 @@ def test_hand_no_suit():
 
 def test_split_range_str_in_parts():
     range_ = Range('[20]AA,KK,AKs[/20],[79]AKo[/79],97o,97s')
-    assert(len(range_.split_range_str_in_parts()) == 6)
+    assert(len(range_._split_range_str_in_parts(range_.input)) == 6)
 
 
 def test_part_combos_count():
@@ -314,7 +314,7 @@ def cycle_pick_combos_for(obj: Union[RangePart, Range]):
     if isinstance(obj, RangePart):
         calc_combos = (obj.freq / 100) * len(combos)
     elif isinstance(obj, Range):
-        for part in obj.parts:
+        for part in obj._parts:
             calc_combos += len(part.combos) * (part.freq / 100)
     else:
         raise ValueError
@@ -322,33 +322,23 @@ def cycle_pick_combos_for(obj: Union[RangePart, Range]):
     top = calc_combos * (1 + TOL)
     picks = []
     for _ in range(CYCLES):
-        x = len(obj.pick_combos())
+        x = len(obj.apply_rng())
         picks.append(x)
     count_picks = pd.DataFrame(picks, columns=['picks'])
     mean = count_picks.picks.mean()
     return (top > mean > bottom)
 
 
-def test_randomizer_skl_mal():
-    """
-    Tests the Suits Randomizer using the Sklansky Malmuth grouping
-    """
-    range_50 = Range('[50]AA[/50]')
-    range_15 = Range('[15]AA[/15]')
-    rand_combos_50 = range_50.randomize_suits_for_range(grouping='skl-mal')
-    rand_combos_15 = range_15.randomize_suits_for_range(grouping='skl-mal')
-    assert(len(rand_combos_50) == 14)
-    assert(len(rand_combos_15) == 4)
-
-
-def test_range_subtraction():
-    range_50 = Range('[50]AA[/50],KK-JJ')
-    range_15 = Range('[15]AA[/15],JJ')
-    range_diff = range_50 - range_15
-    assert('JJ' not in range_diff)
-    assert('KK' in range_diff)
-    assert(range_diff['AA'] == 35)
-    assert(range_50['AA'] == 50)
+# def test_randomizer_skl_mal():
+#     """
+#     Tests the Suits Randomizer using the Sklansky Malmuth grouping
+#     """
+#     range_50 = Range('[50]AA[/50]')
+#     range_15 = Range('[15]AA[/15]')
+#     rand_combos_50 = range_50.randomize_suits_for_range(grouping='skl-mal')
+#     rand_combos_15 = range_15.randomize_suits_for_range(grouping='skl-mal')
+#     assert(len(rand_combos_50) == 14)
+#     assert(len(rand_combos_15) == 4)
 
 
 def test_range_subtraction():
@@ -388,21 +378,21 @@ def test_range_addition_with_combos():
 
 def test_range_iter():
     range_50 = Range('[50]AA[/50],KK-JJ')
-    i = sum(1 for hand, freq in range_50)
-    assert(i == 4)
-    assert(i != 5)
+    for i, _ in enumerate(range_50):
+        pass
+    assert(i == 23)
 
 
 def test_range_len():
     range_50 = Range('[50]AA[/50],KK-JJ')
-    assert(len(range_50) == 4)
-    assert(len(range_50) != 3)
+    assert(len(range_50) == 24)
+    assert(len(range_50) != 23)
 
 
 def test_full_range():
     full_range = Range.full_range()
-    assert(len(full_range) == 169)
-    assert(full_range['54s'] == 100)
+    assert(len(full_range) == 1326)
+    assert('54s' in full_range)
 
 
 def test_combo_range():
@@ -412,7 +402,6 @@ def test_combo_range():
 
 def test_combo_contain():
     combo_range = Range('AsKh,AsKd,AhQs')
-    assert(combo_range['AsKh'] == 100)
     assert('AsKh' in combo_range)
     assert('AhKh' not in combo_range)
 
@@ -424,10 +413,12 @@ if __name__ == "__main__":
     # test_range_hands_freq()
     # test_range_ranges_freq()
     # test_range_plus_ranges_freq(True)
-    # test_split_range_str_in_parts()
+    test_split_range_str_in_parts()
     # test_part_pick_combo()
-    test_omitted_rank_start()
+    # test_omitted_rank_start()
     # test_tripple_range()
     # plt.show()
-    # test_mixed_rank()
+    # test_mixed_suit()
     # test_range_subtraction()
+    # test_range_pick_combo()
+    # test_combo_range()
