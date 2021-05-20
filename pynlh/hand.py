@@ -62,46 +62,6 @@ class Hand():
         else:
             raise TypeError('Input must be of type str or Dict[Combo].')
 
-    # def _reorder_combo_input(self) -> None:
-    #     raise NotImplementedError('Hier hab ich echt
-    #     Quatsch gemacht: AsKh -> AhKs!')
-    #     if not self._input_is_combo:
-    #         return None
-
-    #     is_RRss_format: bool = ((self.input[0].upper() in RANKS)
-    #                             and (self.input[1].upper() in RANKS)
-    #                             and (self.input[2].lower() in SUITS)
-    #                             and (self.input[3].lower() in SUITS))
-    #     is_RsRs_format: bool = ((self.input[0].upper() in RANKS)
-    #                             and (self.input[1].lower() in SUITS)
-    #                             and (self.input[2].upper() in RANKS)
-    #                             and (self.input[3].lower() in SUITS))
-    #     if is_RRss_format:
-    #         rank1 = self.input[0].upper()
-    #         rank2 = self.input[1].upper()
-    #         suit1 = self.input[2].lower()
-    #         suit2 = self.input[3].lower()
-    #     elif is_RsRs_format:
-    #         r1 = self.input[0].upper()
-    #         r2 = self.input[2].upper()
-    #         s1 = self.input[1].lower()
-    #         s2 = self.input[3].lower()
-    #     else:
-    #         raise HandError(self)
-    #     if list(RANKS.keys()).index(r1) < list(RANKS.keys()).index(r2):
-    #         rank1 = r1
-    #         rank2 = r2
-    #     else:
-    #         rank1 = r2
-    #         rank2 = r1
-    #     if list(SUITS.keys()).index(s1) < list(SUITS.keys()).index(s2):
-    #         suit1 = s1
-    #         suit2 = s2
-    #     else:
-    #         suit1 = s2
-    #         suit2 = s1
-    #     self.input = rank1 + suit1 + rank2 + suit2
-
     @staticmethod
     def _avg(lst) -> float:
         return sum(lst) / len(lst)
