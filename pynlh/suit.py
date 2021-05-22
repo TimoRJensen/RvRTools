@@ -33,7 +33,7 @@ class Suit():
         return f"Suit(short={self.short}, name={self.name})"
 
     def __str__(self) -> str:
-        return self.name
+        return self.short
 
     def __eq__(self, other: 'Suit') -> bool:
         if self.__class__ is not other.__class__:

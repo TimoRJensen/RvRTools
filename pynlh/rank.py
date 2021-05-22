@@ -57,7 +57,7 @@ class Rank():
                 f", order={self.order})")
 
     def __str__(self) -> str:
-        return self.name
+        return self.short
 
     def __eq__(self, other: 'Rank') -> bool:
         if self.__class__ is not other.__class__:

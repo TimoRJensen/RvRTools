@@ -53,6 +53,12 @@ class Card():
         else:
             return self.suit < other.suit
 
+    def __repr__(self) -> str:
+        return f"Card(rank={self.rank!r}, suit={self.suit!r})"
+
+    def __str__(self) -> str:
+        return f"{self.rank}{self.suit}"
+
 
 CARDS = []
 for rank in RANKS:

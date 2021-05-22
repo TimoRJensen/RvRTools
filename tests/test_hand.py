@@ -103,6 +103,28 @@ def test_ordering():
     assert(ten_eight_suited < ten_nine)
 
 
+def test_repr():
+    deuces = Hand("22")
+    AKs = Hand("AKs")
+    AKo = Hand("AKo")
+    AK = Hand("AK")
+    assert(repr(deuces) == "Hand('22')")
+    assert(repr(AKs) == "Hand('AKs')")
+    assert(repr(AKo) == "Hand('AKo')")
+    assert(repr(AK) == "Hand('AK')")
+
+
+def test_str():
+    deuces = Hand("22")
+    AKs = Hand("AKs")
+    AKo = Hand("AKo")
+    AK = Hand("AK")
+    assert(str(deuces) == "22")
+    assert(str(AKs) == "AKs")
+    assert(str(AKo) == "AKo")
+    assert(str(AK) == "AK")
+
+
 if __name__ == "__main__":
     # test_get_all_combos_str_input()
     # test_get_all_combos_str_hand_n_type()

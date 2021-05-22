@@ -24,7 +24,7 @@ class Combo():
                  freq: float = 100.00,
                  ) -> None:
         """
-        Pynlh's Combo class object.
+        Pynlh's Combo class.
         Can be instantiated giving it a input like "Ac5d".
         """
         self.input = input
@@ -43,10 +43,17 @@ class Combo():
         return cls(input, freq)
 
     def __repr__(self) -> str:
-        return f"Combo('{self.input}')"
+        if self.freq == 100:
+            return f"Combo('{str(self)}')"
+        else:
+            return f"Combo('{str(self)}', freq={self.freq})"
 
     def __str__(self) -> str:
-        return self.input
+        if self.freq == 100:
+            return str(self.card1) + str(self.card2)
+        else:
+            return (f"[{self.freq}]{str(self.card1) + str(self.card2)}"
+                    + f"[/{self.freq}]")
 
     def __eq__(self, other: 'Combo') -> bool:
         if self.__class__ is not other.__class__:
@@ -70,7 +77,18 @@ class Combo():
         return self.freq >= random_int
 
     def _reorder_cards(self):
-        pass
+
+        if self.card1 < self.card2:
+            self._switch_cards()
+        elif self.card1 == self.card2:
+            if self.card1.suit.order > self.card2.suit.order:
+                self._switch_cards()
+
+    def _switch_cards(self):
+        c1 = self.card2
+        c2 = self.card1
+        self.card1 = c1
+        self.card2 = c2
 
 
 class SuitedCombo(Combo):

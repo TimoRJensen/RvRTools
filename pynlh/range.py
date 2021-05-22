@@ -43,7 +43,7 @@ class Range():
         return f"Range(combos={str(self.combos)})"
 
     def __str__(self) -> str:
-        return str(self.combos)
+        return self.to_str()
 
     def __len__(self) -> int:
         return len(self.combos)
@@ -58,7 +58,10 @@ class Range():
         if isinstance(obj, Range):
             NotImplementedError
         if isinstance(obj, Hand):
-            NotImplementedError
+            for part in self._parts:
+                for hand in part.hands:
+                    if (hand == obj) and (hand.handstring == obj.handstring):
+                        return deepcopy(hand)
         if isinstance(obj, RangePart):
             NotImplementedError
 

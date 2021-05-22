@@ -23,6 +23,16 @@ class Str2pynlh():
         self._parent = self._get_parent_object()
 
     def get_object(self) -> Union[Combo, Hand, Range]:
+        """creates Pynlh objects from given string. In a sense a factory that
+        decides which object will be appropriate for given string.
+
+        Raises:
+            ValueError: Unexpected Error, gets raised when given string passes
+            validation, but does not match any objects.
+
+        Returns:
+            Union[Combo, Hand, Range]: said pynlh objects.
+        """
         parent = str(self._parent)
         if self.is_combo:
             if self.is_combo_pair:
@@ -42,6 +52,9 @@ class Str2pynlh():
                 return NoSuitHand(parent)
         elif self.is_range:
             return Range(parent)
+        else:
+            raise ValueError(f'''Given input {self.input} could not be matched
+                              to any pynlh objects.''')
 
     def _validate_input(self):
         """
@@ -125,8 +138,8 @@ class Str2pynlh():
 
     @property
     def is_hand_suited(self) -> bool:
-        if self.is_hand:
-            parent = str(self._parent)
+        parent = str(self._parent)
+        if self.is_hand and len(parent) == 3:
             return (parent[0] != parent[1]) and (parent[2] == 's')
         else:
             return False
@@ -135,9 +148,8 @@ class Str2pynlh():
     def is_hand_offsuit(self) -> bool:
         if not self.is_hand:
             return False
-
         parent = str(self._parent)
-        if len(parent[2]) == 3:
+        if len(parent) == 3:
             return (parent[2] == 'o')
         else:
             return False
