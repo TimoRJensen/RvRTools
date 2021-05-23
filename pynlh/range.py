@@ -48,6 +48,25 @@ class Range():
     def __len__(self) -> int:
         return len(self.combos)
 
+    def __sub__(self, o: 'Range') -> 'Range':
+        new = deepcopy(self.combos)
+        for k, combo in self.combos.items():
+            if k in o.combos:
+                if o.combos[k].freq >= combo.freq:
+                    del new[k]
+                else:
+                    new[k].freq = combo.freq - o.combos[k].freq
+        return Range(new)
+
+    def __add__(self, o: 'Range') -> 'Range':
+        new = deepcopy(self.combos)
+        for k, combo in o.combos.items():
+            if k in self.combos:
+                new[k].freq = min(self.combos[k].freq + combo.freq, 100)
+            else:
+                new[k] = combo
+        return Range(new)
+
     def __getitem__(self, input) -> Combo:
         from .str2pynlh import Str2pynlh
         obj = Str2pynlh(input).get_object()
@@ -67,7 +86,7 @@ class Range():
 
     def __setitem__(self) -> 'Range':
         # TODO Construct new Range here.
-        return deepcopy(self)
+        deepcopy(self)
 
     def __delitem__(self, input) -> 'Range':
         # TODO Construct new Range here.

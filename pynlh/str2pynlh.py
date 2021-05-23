@@ -79,18 +79,33 @@ class Str2pynlh():
             raise Exception('Unexpected Error.')
 
     def _is_range(self) -> bool:
-        regex = re.compile('[-+]')
+        regex = re.compile('[-+,]')
         match = regex.search(self.input)
         return bool(match)
 
     def _is_hand(self) -> bool:
-        regex = re.compile(f'(^{self.RANK2}{self.TYPE}$)')
+        freq_open = r"^\[\d{1,}\]"
+        freq_close = r"\[/\d{1,}\]$"
+        rank2_n_type = self.RANK2 + self.TYPE
+        regex = re.compile(f'(^{rank2_n_type}$)')
+        # regex_freq = re.compile(f'({freq_open}{rank2_n_type}{freq_close})')
+        regex_str = r"^\[\d{1,}\][AKQJT987654321]{2}[SO]{0,1}\[/\d{1,}\]$"
+        regex_freq = re.compile(regex_str)
         match = regex.match(self.input.upper())
-        return bool(match)
+        match_freq = re.search(regex_str, self.input.upper())
+        # return (bool(match) or bool(match_freq))
+        match_bool = bool(match)
+        match_freq_bool = bool(match_freq)
+        return (match_bool or match_freq_bool)
+
 
     def _is_combo(self) -> bool:
-        regex = re.compile(f'(^{self.RANK}{self.SUIT}{self.RANK}{self.SUIT}$)')
+        combo_regex = self.RANK + self.SUIT + self.RANK + self.SUIT
+        regex = re.compile(f'(^{combo_regex}$)')
+        # regex_freq = re.compile(f'(^\[\d{1,}\]{combo_regex}\[/\d{1,}\]$)')
         match = regex.match(self.input.upper())
+        # match_freq = regex_freq.match(self.input.upper())
+        # return bool(match) or bool(match_freq)
         return bool(match)
 
     @property

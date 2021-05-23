@@ -363,11 +363,12 @@ def test_range_subtraction():
     range_15 = Range('[15]AA[/15],JJ,KcKh')
     range_diff = range_50 - range_15
     assert('JJ' not in range_diff)
-    assert('KK' in range_diff)
+    assert('KsKc' in range_diff)
+    assert('KhKc' not in range_diff)
     assert('KcKh' not in range_diff)
-    assert(range_diff['KK'] < 100)
-    assert(range_diff['AA'] == 35)
-    assert(range_50['AA'] == 50)
+    assert(range_diff['KsKc'].freq == 100)
+    assert(range_diff['AcAs'].freq == 35)
+    assert(range_50['AhAc'].freq == 50)
 
 
 def test_range_addition():
@@ -376,21 +377,23 @@ def test_range_addition():
     range_sum = range_50 + range_15
     assert('TT' in range_sum)
     assert('99' not in range_sum)
-    assert(range_sum['AA'] == 65)
-    assert(range_50['AA'] == 50)
-    assert(range_15['AA'] == 15)
+    assert(range_sum['AcAh'].freq == 65)
+    assert(range_50['AsAd'].freq == 50)
+    assert(range_15['AdAc'].freq == 15)
 
 
 def test_range_addition_with_combos():
-    range_50 = Range('[50]AA[/50],KK-JJ')
-    range_15 = Range('[15]AA[/15],TT,9c9s,[10]8s8c[/]')
+    range_50 = Str2pynlh('[50]AA[/50],KK-JJ').get_object()
+    range_15 = Str2pynlh('[15]AA[/15],TT,9c9s,[10]8s8c[/10]').get_object()
     range_sum = range_50 + range_15
     assert('TT' in range_sum)
     assert('66' not in range_sum)
-    assert('99' in range_sum)
-    assert(range_sum['AA'] == 65)
-    assert(range_50['AA'] == 50)
-    assert(range_15['AA'] == 15)
+    assert('9c9s' in range_sum)
+    assert(range_sum['AsAh'].freq == 65)
+    assert(range_sum['9s9c'].freq == 100)
+    assert(range_sum['8s8c'].freq == 10)
+    assert(range_50['AcAs'].freq == 50)
+    assert(range_15['AhAd'].freq == 15)
 
 
 def test_range_iter():

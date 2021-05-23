@@ -79,11 +79,11 @@ class Hand():
             self.hand = self.input[0] + self.input[2]
         else:
             self.hand = self.input[0:2]
-        try:
-            self.rank1 = Rank(self.hand[0].upper())
-            self.rank2 = Rank(self.hand[1].upper())
-        except KeyError:
-            raise HandError(self)
+        # try:
+        self.rank1 = Rank(self.hand[0].upper())
+        self.rank2 = Rank(self.hand[1].upper())
+        # except KeyError:
+        #     raise HandError(self)
 
     def _parse_hand_type_from_input(self) -> str:
         # sourcery skip: remove-redundant-if

@@ -8,15 +8,22 @@ from pynlh import (Str2pynlh,
                    PairCombo,
                    SuitedCombo,
                    OffsuitCombo,
+                   Range,
                    )
 
 
 def test_get_offsuit_hand():
     AKo = Str2pynlh('AKo')
+    AKo_50 = Str2pynlh('[50]AKo[/50]')
     AKo_obj = AKo.get_object()
+    AKo_50_obj = AKo_50.get_object()
     assert(str(AKo_obj) == 'AKo')
     assert(isinstance(AKo_obj, Hand))
     assert(isinstance(AKo_obj, OffsuitHand))
+    assert(str(AKo_50_obj) == 'AKo')
+    assert(isinstance(AKo_50_obj, Hand))
+    assert(isinstance(AKo_50_obj, OffsuitHand))
+    assert(AKo_50_obj['AsKh'].freq == 50)
 
 
 def test_get_suited_hand():
@@ -65,3 +72,17 @@ def test_get_pair_combo():
     assert(str(AA_obj) == 'AcAh')
     assert(isinstance(AA_obj, Combo))
     assert(isinstance(AA_obj, PairCombo))
+
+
+def test_get_pair_dash_range():
+    aa_dash_jj = Str2pynlh('AA-JJ')
+    aa_dash_jj_obj = aa_dash_jj.get_object()
+    assert(isinstance(aa_dash_jj_obj, Range))
+    assert(len(aa_dash_jj_obj) == 4 * 6)
+
+
+def test_get_offsuit_dash_range():
+    ako_dash_ajo = Str2pynlh('AKo-AJo')
+    ako_dash_ajo_obj = ako_dash_ajo.get_object()
+    assert(isinstance(ako_dash_ajo_obj, Range))
+    assert(len(ako_dash_ajo_obj) == 3 * 12)
