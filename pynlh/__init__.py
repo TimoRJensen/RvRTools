@@ -15,4 +15,4 @@ from .range import Range, RangePart, RangeError  # noqa: F401,E402
 from .tools import timer  # noqa: F401,E402
 from .strategy import Strategy  # noqa: F401,E402
 from .card import Card, CARDS  # noqa: F401,E402
-from .str2pynlh import Str2pynlh  # noqa: F401,E402
+from .str2pynlh import Str2pynlh, Pynlh  # noqa: F401,E402
