@@ -173,3 +173,8 @@ class Str2pynlh():
             return (parent[2] == 'o')
         else:
             return False
+
+
+class Pynlh(Str2pynlh):
+    def get(self):
+        return super().get_object()
