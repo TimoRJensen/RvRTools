@@ -9,9 +9,10 @@ from .hand import Hand, PairHand, SuitedHand, OffsuitHand, NoSuitHand
 
 class Str2pynlh():
     RANK = '[AKQJT987654321]'
-    RANK2 = r'[AKQJT987654321]{2}'
-    SUIT = '[SDCH]'
-    TYPE = r"[SO]{0,1}"
+    TWICE = r"{2}"
+    SUIT = r'[SDCH]'
+    TYPE = r"[SO]"
+    ZERO_TO_ONE = r"{0,1}"
 
     def __init__(self, input: str) -> None:
         """Class to turn a String into an Pynlh object."""
@@ -84,20 +85,20 @@ class Str2pynlh():
         return bool(match)
 
     def _is_hand(self) -> bool:
+        search_in = self.input.upper()
+        rank2_n_type = self.RANK + self.TWICE + self.TYPE + self.ZERO_TO_ONE
+        regex_str = f'(^{rank2_n_type}$)'
+        return (bool(re.search(regex_str, search_in))
+                or
+                self._search_regex_with_freq_tag(regex_str, search_in))
+
+    @staticmethod
+    def _search_regex_with_freq_tag(search_for, search_in) -> bool:
         freq_open = r"^\[\d{1,}\]"
         freq_close = r"\[/\d{1,}\]$"
-        rank2_n_type = self.RANK2 + self.TYPE
-        regex = re.compile(f'(^{rank2_n_type}$)')
-        # regex_freq = re.compile(f'({freq_open}{rank2_n_type}{freq_close})')
-        regex_str = r"^\[\d{1,}\][AKQJT987654321]{2}[SO]{0,1}\[/\d{1,}\]$"
-        regex_freq = re.compile(regex_str)
-        match = regex.match(self.input.upper())
-        match_freq = re.search(regex_str, self.input.upper())
-        # return (bool(match) or bool(match_freq))
-        match_bool = bool(match)
-        match_freq_bool = bool(match_freq)
-        return (match_bool or match_freq_bool)
-
+        regex = freq_open + search_for + freq_close
+        match = re.search(regex, search_in)
+        return bool(match)
 
     def _is_combo(self) -> bool:
         combo_regex = self.RANK + self.SUIT + self.RANK + self.SUIT
