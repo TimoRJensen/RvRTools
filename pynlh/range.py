@@ -134,17 +134,24 @@ class Range():
                 err_msg = ch + RangeError.ERR003_NOT_VALID_CHAR
                 raise RangeError(self.input, msg=err_msg)
 
-    def apply_rng(self) -> List[Combo]:
+    def apply_rng(self) -> 'Range':
         return self.from_combos_list([combo for part in self._parts
                                       for combo in part.apply_rng()])
 
-    def to_str(self) -> str:
+    def to_str(self, remove_freq_tags: bool = False) -> str:
         rv = ''
-        for k, _ in self:
-            if rv:
-                rv += ',' + k
-            else:
-                rv = k
+        if remove_freq_tags:
+            for k, _ in self:
+                if rv:
+                    rv += ',' + RangePart.remove_freq_tag(k)
+                else:
+                    rv = RangePart.remove_freq_tag(k)
+        else:
+            for k, _ in self:
+                if rv:
+                    rv += ',' + k
+                else:
+                    rv = k
         return rv
 
     @staticmethod
@@ -344,7 +351,6 @@ class RangePart():
         Returns a boolean.
         """
         return '[/' in self.part
-
 
     @staticmethod
     def get_freq(input) -> float:
