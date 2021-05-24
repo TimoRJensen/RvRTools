@@ -2,7 +2,7 @@ import re
 
 from typing import Union
 
-from .range import Range, RangeError
+from .range import Range, RangePart, RangeError
 from .combo import Combo, PairCombo, SuitedCombo, OffsuitCombo
 from .hand import Hand, PairHand, SuitedHand, OffsuitHand, NoSuitHand
 
@@ -34,25 +34,27 @@ class Str2pynlh():
         Returns:
             Union[Combo, Hand, Range]: said pynlh objects.
         """
-        parent = str(self._parent)
+        if self.is_combo or self.is_hand:
+            freq = RangePart.get_freq(self.input)
+            parent_no_freq = RangePart.remove_freq_tag(self.input)
         if self.is_combo:
             if self.is_combo_pair:
-                return PairCombo(parent)
+                return PairCombo(parent_no_freq, freq)
             elif self.is_combo_suited:
-                return SuitedCombo(parent)
+                return SuitedCombo(parent_no_freq, freq)
             elif self.is_combo_offsuit:
-                return OffsuitCombo(parent)
+                return OffsuitCombo(parent_no_freq, freq)
         elif self.is_hand:
             if self.is_hand_pair:
-                return PairHand(parent)
+                return PairHand(parent_no_freq, freq)
             elif self.is_hand_suited:
-                return SuitedHand(parent)
+                return SuitedHand(parent_no_freq, freq)
             elif self.is_hand_offsuit:
-                return OffsuitHand(parent)
+                return OffsuitHand(parent_no_freq, freq)
             elif self.is_hand_nosuit:
-                return NoSuitHand(parent)
+                return NoSuitHand(parent_no_freq, freq)
         elif self.is_range:
-            return Range(parent)
+            return Range(self.input)
         else:
             raise ValueError(f'''Given input {self.input} could not be matched
                               to any pynlh objects.''')
@@ -73,9 +75,11 @@ class Str2pynlh():
         if self.is_range:
             return Range(self.input)
         elif self.is_hand:
-            return Hand(self.input)
+            return Hand(RangePart.remove_freq_tag(self.input),
+                        RangePart.get_freq(self.input))
         elif self.is_combo:
-            return Combo(self.input)
+            return Combo(RangePart.remove_freq_tag(self.input),
+                         RangePart.get_freq(self.input))
         else:
             raise Exception('Unexpected Error.')
 
@@ -90,7 +94,7 @@ class Str2pynlh():
         regex_str = f'(^{rank2_n_type}$)'
         return (bool(re.search(regex_str, search_in))
                 or
-                self._search_regex_with_freq_tag(regex_str, search_in))
+                self._search_regex_with_freq_tag(rank2_n_type, search_in))
 
     @staticmethod
     def _search_regex_with_freq_tag(search_for, search_in) -> bool:

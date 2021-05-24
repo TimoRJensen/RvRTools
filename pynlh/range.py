@@ -123,7 +123,7 @@ class Range():
         flat_combos_list: List[Combo] = self._flatten_l_of_ls(combos_list)
         flat = self._flatten_l_of_ls(flat_combos_list)
         for combo in flat:
-            self.combos[combo.input] = combo
+            self.combos[RangePart.remove_freq_tag(str(combo))] = combo
 
     def _validate_input(self):
         """
@@ -273,8 +273,8 @@ class RangePart():
         self.range_identifier = range_identifier
         self.plus = plus
         if not self.freq:
-            self.freq = self.get_freq()
-        self.part_no_freq = self.remove_freq_tag()
+            self.freq = self.get_freq(self.part)
+        self.part_no_freq = self.remove_freq_tag(self.part)
         self.hands: List[Hand] = self._set_hands()
         # self.hands_str = self.get_hands_str()
 
@@ -345,14 +345,16 @@ class RangePart():
         """
         return '[/' in self.part
 
-    def get_freq(self):
+
+    @staticmethod
+    def get_freq(input) -> float:
         """
         Extracts the frequency from a range part string that includes a
          frequency. Returns a Float or 100.
         """
         start = '['
         end = ']'
-        s = self.part
+        s: str = input
         if (s.find(start) > -1) and (s.find(end) > -1):
             return float(s[s.find(start) + len(start):s.find(end)])
         else:
@@ -462,16 +464,17 @@ class RangePart():
         return [combo for hand in self.hands
                 for combo in hand.apply_rng()]
 
-    def remove_freq_tag(self):
+    @staticmethod
+    def remove_freq_tag(input: str):
         """Removes the frequency tag from a range part string. Returns a
         String.
         """
-        if '[' not in self.part:
-            return self.part
+        if '[' not in input:
+            return input
 
         start = '['
         end = ']'
-        clean = self.part[self.part.find(end) + 1:]
+        clean = input[input.find(end) + 1:]
         clean = clean[:clean.find(start)]
         return clean
 

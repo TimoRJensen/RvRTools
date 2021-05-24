@@ -86,3 +86,10 @@ def test_get_offsuit_dash_range():
     ako_dash_ajo_obj = ako_dash_ajo.get_object()
     assert(isinstance(ako_dash_ajo_obj, Range))
     assert(len(ako_dash_ajo_obj) == 3 * 12)
+
+
+def test_get_comma_range_with_freq():
+    range_50 = Str2pynlh('[50]AA[/50],KK-JJ').get_object()
+    assert(isinstance(range_50, Range))
+    assert(len(range_50) == 4 * 6)
+    assert(range_50['AsAh'].freq == 50)
