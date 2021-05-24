@@ -1,3 +1,4 @@
+from functools import total_ordering
 from random import randint
 
 from .card import Card
@@ -17,7 +18,7 @@ class ComboError(Exception):
     def __str__(self):
         return f"'{self.combo_str}' -> {self.msg}"
 
-
+@total_ordering
 class Combo():
     def __init__(self,
                  input: str,
@@ -61,10 +62,8 @@ class Combo():
         return (self.card1 == other.card1) and (self.card2 == other.card2)
 
     def __gt__(self, other: 'Combo') -> bool:
-        if self.__class__ is not other.__class__:
+        if not isinstance(other, Combo):
             return NotImplemented
-        if (self.card1 == self.card2) and (other.card1 != other.card2):
-            return True
         if self.card1 != other.card1:
             return self.card1 > other.card1
         else:
@@ -100,4 +99,7 @@ class OffsuitCombo(Combo):
 
 
 class PairCombo(Combo):
-    pass
+    def __gt__(self, other: 'Combo') -> bool:
+        if not isinstance(other, PairCombo):
+            return True
+        return super().__gt__(other)
