@@ -1,6 +1,6 @@
 # import pytest
 
-from pynlh import Hand, Combo
+from pynlh import Hand, Combo, Pynlh
 
 
 def test_hand_combo():
@@ -81,16 +81,16 @@ def test_pick_combos():
 
 
 def test_ordering():
-    threes = Hand("33")
-    deuces = Hand("22")
-    deuces2 = Hand("22")
-    AKs = Hand("AKs")
-    AKo = Hand("AKo")
-    AQs = Hand("AQs")
-    AJo = Hand("AJo")
-    ten_nine = Hand("T9")
-    ten_nine_off = Hand("T9o")
-    ten_eight_suited = Hand("T8s")
+    threes = Pynlh("33").get()
+    deuces = Pynlh("22").get()
+    deuces2 = Pynlh("22").get()
+    AKs = Pynlh("AKs").get()
+    AKo = Pynlh("AKo").get()
+    AQs = Pynlh("AQs").get()
+    AJo = Pynlh("AJo").get()
+    ten_nine = Pynlh("T9").get()
+    ten_nine_off = Pynlh("T9o").get()
+    ten_eight_suited = Pynlh("T8s").get()
     assert(deuces > AKs > AQs)
     assert(deuces > AKs > AQs > AJo > ten_nine)
     assert(AKo >= AQs)

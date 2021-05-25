@@ -72,7 +72,7 @@ class Hand():
 
     def _get_one_combo(self) -> Combo:
         for _, combo in self.combos.items():
-            return combo
+            return combo  # TODO Das funktioniert nicht mit NoSuit Hands!
 
     def _parse_hand_from_input(self) -> None:
         if self._input_is_combo:
