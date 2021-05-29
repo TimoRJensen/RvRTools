@@ -49,7 +49,7 @@ class Combo():
             return f"{self.__class__.__name__}('{str(self)}')"
         else:
             return (f"{self.__class__.__name__}('{str(self)}',"
-                    + " freq={self.freq})")
+                    + f" freq={self.freq})")
 
     def __str__(self) -> str:
         if self.freq == 100:
