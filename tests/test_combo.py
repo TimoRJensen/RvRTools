@@ -5,9 +5,11 @@ six_four_suited_50 = Combo.new('6d4d', 50)
 threes = Str2pynlh('3s3c').get_object()
 threes2 = Str2pynlh('3s3c').get_object()
 fives = Str2pynlh('5h5c').get_object()
-AKo = Str2pynlh('AhKc').get_object()
+AKo = Str2pynlh('AcKh').get_object()
 # AQs = Str2pynlh('AhQh').get_object()
 AQs = Pynlh('AhQh').get()
+AcKc = Pynlh('[99]AcKc[/99]').get()
+deuces_dc = Pynlh('2c2d').get()
 
 
 def test_init():
@@ -35,6 +37,8 @@ def test_comparisons():
     assert(threes > AKo)
     assert(threes >= AKo)
     assert(threes != AKo)
+    assert(deuces_dc > AcKc)
+    assert(AcKc == AKo)
 
 
 def test_combo_repr():
