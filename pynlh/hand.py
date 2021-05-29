@@ -72,7 +72,7 @@ class Hand():
 
     def _get_one_combo(self) -> Combo:
         for _, combo in self.combos.items():
-            return combo  # TODO Das funktioniert nicht mit NoSuit Hands!
+            return combo
 
     def _parse_hand_from_input(self) -> None:
         if self._input_is_combo:
@@ -122,8 +122,10 @@ class Hand():
         self.handstring = self.hand + hand_type_abr
 
     def _set_combos(self) -> None:
+        from .str2pynlh import Pynlh
         if not self._input_is_combo:
-            self.combos = {combo: Combo(input=combo, freq=self.freq)
+            f = self.freq
+            self.combos = {combo: Pynlh(f"[{f}]{combo}[/{f}]").get()
                            for combo in self.all_combos_str}
         else:
             self.combos[self.input] = Combo(self.input, self.freq)
@@ -136,6 +138,7 @@ class Hand():
     def __gt__(self, o: 'Hand') -> bool:
         if not isinstance(o, Hand):
             return NotImplemented
+        #  TODO Compare to Combo?
         return self._get_one_combo() > o._get_one_combo()
 
     def __len__(self) -> int:
@@ -144,7 +147,7 @@ class Hand():
         return len(actual_combos)
 
     def __repr__(self) -> str:
-        return f"Hand('{self.input}')"
+        return f"{self.__class__.__name__}('{self.input}')"
 
     def __str__(self) -> str:
         return(self.handstring)

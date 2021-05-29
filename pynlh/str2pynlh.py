@@ -8,7 +8,7 @@ from .hand import Hand, PairHand, SuitedHand, OffsuitHand, NoSuitHand
 
 
 class Str2pynlh():
-    RANK = '[AKQJT987654321]'
+    RANK = '[AKQJT98765432]'
     TWICE = r"{2}"
     SUIT = r'[SDCH]'
     TYPE = r"[SO]"
@@ -98,8 +98,8 @@ class Str2pynlh():
 
     @staticmethod
     def _search_regex_with_freq_tag(search_for, search_in) -> bool:
-        freq_open = r"^\[\d{1,}\]"
-        freq_close = r"\[/\d{1,}\]$"
+        freq_open = r"^\[\d{1,}.*\]"
+        freq_close = r"\[/\d{1,}.*\]$"
         regex = freq_open + search_for + freq_close
         match = re.search(regex, search_in)
         return bool(match)
@@ -107,11 +107,10 @@ class Str2pynlh():
     def _is_combo(self) -> bool:
         combo_regex = self.RANK + self.SUIT + self.RANK + self.SUIT
         regex = re.compile(f'(^{combo_regex}$)')
-        # regex_freq = re.compile(f'(^\[\d{1,}\]{combo_regex}\[/\d{1,}\]$)')
-        match = regex.match(self.input.upper())
-        # match_freq = regex_freq.match(self.input.upper())
-        # return bool(match) or bool(match_freq)
-        return bool(match)
+        search_in = self.input.upper()
+        match = regex.match(search_in)
+        return (bool(match) or self._search_regex_with_freq_tag(combo_regex,
+                                                                search_in))
 
     @property
     def is_combo_pair(self) -> bool:
