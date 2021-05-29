@@ -18,6 +18,7 @@ class ComboError(Exception):
     def __str__(self):
         return f"'{self.combo_str}' -> {self.msg}"
 
+
 @total_ordering
 class Combo():
     def __init__(self,
@@ -45,9 +46,10 @@ class Combo():
 
     def __repr__(self) -> str:
         if self.freq == 100:
-            return f"Combo('{str(self)}')"
+            return f"{self.__class__.__name__}('{str(self)}')"
         else:
-            return f"Combo('{str(self)}', freq={self.freq})"
+            return (f"{self.__class__.__name__}('{str(self)}',"
+                    + " freq={self.freq})")
 
     def __str__(self) -> str:
         if self.freq == 100:
